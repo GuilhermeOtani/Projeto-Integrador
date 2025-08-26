@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/index.xhtml">
+        <ui:define name="body">
+            <div id="fornecedor-form-container">
+                <h:form>
+                    <p:growl/>
+                    <p:panelGrid columns="2">                    
+                        Nome:<p:inputText value="#{clienteControle.cliente.nome}"
+                                          required="true"
+                                          requiredMessage="O nome é obrigatório!"
+                                          size="40"/>
+                        CPF:<p:inputText value="#{clienteControle.cliente.cpf}"
+                                         required="true"
+                                         requiredMessage="O CPF é obrigatório!"
+                                         size="40"/>
+                        RG:<p:inputText value="#{clienteControle.cliente.rg}" 
+                                        required="true"
+                                        requiredMessage="O RG é obrigatório!"
+                                        size="40"/>
+                        Telefone:<p:inputText value="#{clienteControle.cliente.telefone}" 
+                                              required="true"
+                                              requiredMessage="O telefone é obrigatório!"
+                                              size="40"/>
+                        Endereço:<p:inputText value="#{clienteControle.cliente.endereco}" 
+                                              required="true"
+                                              requiredMessage="O endereço é obrigatório!"
+                                              size="40"/>    
+                        Cidade:<p:selectOneMenu value="#{clienteControle.cliente.cidade}"
+                                                converter="#{clienteControle.cidadeConverter}" style="width: 140px">
+                            <f:selectItems value="#{clienteControle.listaCidades}" 
+                                           var="cid"
+                                           itemLabel="#{cid.nome}"
+                                           itemValue="#{cid}"
+                                           />
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton value="Salvar"
+                                     ajax="false"
+                                     actionListener="#{clienteControle.salvar}"
+                                     action="clientelista"
+                                     style="margin-right: 440px"/>
+                    
+                    <p:commandButton value="Cancelar" action="clientelista"
+                                     ajax="false" immediate="true"
+                                     style="background-color: red"/>
+
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

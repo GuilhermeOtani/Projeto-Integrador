@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/index.xhtml">
+        <ui:define name="body">
+            <div id="fornecedor-form-container">
+                <h:form>
+                    <p:growl/>
+                    <p:panelGrid columns="2">
+                        Nome:<p:inputText value="#{produtoControle.produto.nome}"
+                                          required="true"
+                                          requiredMessage="O nome é obrigatório!"
+                                          size="80"/>
+                        Código<p:inputText value="#{produtoControle.produto.codigo}"
+                                           required="true"
+                                           requiredMessage="O código é obrigatório!"
+                                           size="80"/>
+                        Localização:<p:inputText value="#{produtoControle.produto.localizaco}"
+                                                 required="true"
+                                                 requiredMessage="A localização é obrigatória!"
+                                                 size="80"/>
+                        <h:outputLabel for="estoque" value="Estoque" />
+                        <p:inputNumber id="estoque" value="#{produtoControle.produto.estoque}"
+                                       required="true"
+                                       requiredMessage="O estoque é obrigatório!"
+                                       minValue="0"
+                                       size="80"/>
+                        <h:outputLabel for="valor" value="Valor Unitário" />
+                        <p:inputNumber id="valor" value="#{produtoControle.produto.valor}"
+                                       symbol="R$"
+                                       required="true"
+                                       requiredMessage="O valor é obrigatório!"
+                                       minValue="0"
+                                       size="80" 
+                                       decimalSeparator=","
+                                       thousandSeparator="."
+                                       />
+                        Fornecedor:<p:selectOneMenu value="#{produtoControle.produto.fornecedor}"
+                                                    converter="#{produtoControle.fornecedorConverter}" style="width: 180px">
+                            <f:selectItems value="#{produtoControle.listaFornecedor}" 
+                                           var="pro"
+                                           itemLabel="#{pro.nome}"
+                                           itemValue="#{pro}"
+                                           />
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton value="Salvar"
+                                     ajax="false"
+                                     actionListener="#{produtoControle.salvar()}"
+                                     action="produtolista"
+                                     style="margin-right: 440px;"/>
+                    <p:commandButton value="Cancelar" action="produtolista"
+                                     ajax="false" immediate="true"
+                                     style="background: red;"
+                                     />
+
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

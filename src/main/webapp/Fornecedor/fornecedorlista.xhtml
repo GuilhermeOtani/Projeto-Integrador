@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/index.xhtml">
+        <ui:define name="body">
+            <f:view locale="pt_BR" />
+
+            <h:form id="formFornecedores">
+                <p:growl id="messages" showDetail="true"/>
+
+                <div class="content">
+                    <div class="container-fluid"> <!-- move o botao de novo para baixo -->
+
+                        <p:dataTable id="tabelaFornecedores" value="#{fornecedorControle.listaFornecedor}" var="fon"
+                                     emptyMessage="Nenhum Fornecedor cadastrado!"
+                                     widgetVar="tabelaFornecedores"
+                                     styleClass="ui-datatable-responsive"
+                                     scrollable="true"
+                                     scrollHeight="520px"
+                                     >
+
+                            <p:column headerText="Nome" width="170" filterBy="#{fon.nome}" filterMatchMode="contains"
+                                      sortable="true" style="text-align: center;">
+                                #{fon.nome}
+                            </p:column>
+                            <p:column headerText="CNPJ" width="170" filterBy="#{fon.cnpj}" filterMatchMode="contains"
+                                      sortable="true" style="text-align: center;">
+                                #{fon.cnpj}
+                            </p:column>
+                            <p:column headerText="Email" width="190" filterBy="#{fon.email}" filterMatchMode="contains"
+                                      sortable="true" style="text-align: center;">
+                                #{fon.email}
+                            </p:column>
+                            <p:column headerText="Telefone" width="150" sortable="true" style="text-align: center;">
+                                #{fon.telefone}
+                            </p:column>
+                            <p:column headerText="Endereço" width="160" sortable="true" style="text-align: center;">
+                                #{fon.endereco}
+                            </p:column>
+                            <p:column headerText="Cidade" width="80" sortable="true" style="text-align: center;">
+                                #{fon.cidade.nome}
+                            </p:column>
+                            <p:column headerText="Operações" width="180" style="text-align: center">
+                                <div class="action-buttons">
+                                    <p:commandButton icon="pi pi-pencil"
+                                                     styleClass="ui-button-warning"
+                                                     actionListener="#{fornecedorControle.editar(fon)}"
+                                                     ajax="false"
+                                                     immediate="true"
+                                                     action="fornecedoredita"
+                                                     title="Editar"/>
+
+                                    <p:commandButton icon="pi pi-trash"
+                                                     styleClass="ui-button-danger"
+                                                     title="Excluir"
+                                                     onclick="PF('confirmDialog').show();">
+                                        <f:setPropertyActionListener target="#{fornecedorControle.fornecedorSelecionado}" value="#{fon}"/>
+                                    </p:commandButton>
+                                </div>
+                            </p:column>
+                        </p:dataTable>
+                        <p:toolbar>
+                            <p:toolbarGroup>
+                                <p:commandButton value="Novo fornecedor"
+                                                 action="fornecedoredita"
+                                                 actionListener="#{fornecedorControle.novo()}"
+                                                 update=":formFornecedores:messages"
+                                                 ajax="false" />
+                            </p:toolbarGroup>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </h:form>
+
+            <!-- Confirmar Exclusão -->
+            <p:dialog header="Confirmar Exclusão"
+                      widgetVar="confirmDialog"
+                      modal="true"
+                      showEffect="fade"
+                      hideEffect="fade"
+                      resizable="false"
+                      id="dialogConfirmacao"
+                      appendTo="@(body)">
+
+                <h:form id="formConfirmacao">
+                    <p:outputPanel id="painelConfirmacao" style="text-align: center;">
+                        <h:outputText value="Tem certeza que deseja excluir este fornecedor?" style="display: block; margin: 10px 0;" />
+
+                        <p:commandButton value="Sim" icon="pi pi-check"
+                                         action="#{fornecedorControle.remover}"
+                                         process="@this"
+                                         update=":formFornecedores:tabelaFornecedores"
+                                         oncomplete="PF('confirmDialog').hide(); $('.ui-widget-overlay').fadeOut();" 
+                                         styleClass="ui-button-danger" 
+                                         style="margin-top: 15px;" />
+                        
+                        <p:commandButton value="Não" icon="pi pi-times"
+                                         onclick="PF('confirmDialog').hide();"
+                                         type="button"
+                                         styleClass="ui-button-secondary"
+                                         style="margin-top: 10px; margin-left: 10px;" />
+                    </p:outputPanel>
+                </h:form>
+            </p:dialog>
+
+        </ui:define>
+    </ui:composition>
+</html>

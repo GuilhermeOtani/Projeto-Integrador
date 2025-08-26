@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>Cadastro de Produto</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+        <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'Segoe UI', sans-serif;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+
+            .container {
+                display: flex;
+            }
+
+            .sidebar {
+                width: 250px;
+                height: 100vh;
+                background-color: #2c3e50;
+                color: white;
+                position: fixed;
+                top: 0;
+                left: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding-top: 35px;
+                gap: 20px;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .sidebar h2 {
+                font-size: 26px;
+                font-weight: 600;
+                margin-bottom: 20px;
+                color: #ecf0f1;
+            }
+
+            .menu-link,
+            .submenu-toggle,
+            .submenu-link {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                color: #ecf0f1;
+                font-size: 19px;
+                width: 90%;
+                padding: 16px 16px;
+                border-radius: 8px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                text-decoration: none;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                transition: background 0.3s ease, transform 0.2s ease;
+            }
+
+            .menu-link:hover,
+            .submenu-toggle:hover,
+            .submenu-link:hover {
+                background-color: #34495e;
+                transform: translateX(5px);
+            }
+
+            /*container do submenu */
+            .submenu-container {
+                width: 100%;
+            }
+
+            /* submenu escondido por padrão */
+            .submenu {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                margin-left: 20px; /* identa o submenu */
+            }
+
+            /* Quando ativo, submenu mostra */
+            .submenu-container.active .submenu {
+                max-height: 500px; /* suficiente para mostrar todos links */
+            }
+
+            /* Ícone da seta */
+            .toggle-icon {
+                margin-left: auto;
+                transition: transform 0.3s ease;
+            }
+
+            /* quando aberto, gira a seta */
+            .submenu-container.active .toggle-icon {
+                transform: rotate(180deg);
+            }
+
+            .content {
+                display: flex;
+                align-items: flex-start;
+                min-height: 10vh;
+                flex-grow: 1;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-group label {
+                font-size: 16px;
+                margin-bottom: 10px;
+                display: block;
+                font-weight: bold;
+            }
+
+            .form-group input,
+            .form-group select {
+                width: 100%;
+                padding: 10px;
+                font-size: 16px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
+
+            .form-group button {
+                background-color: #333;
+                color: white;
+                padding: 12px 20px;
+                font-size: 16px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            .form-group button:hover {
+                background-color: #575757;
+            }
+
+            .footer {
+                background-color: #2c3e50;
+                color: #ecf0f1;
+                text-align: center;
+                padding: 15px 0;
+                font-size: 14px;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                width: calc(100% - 250px);
+                position: fixed;
+                bottom: 0;
+                left: 250px;
+                z-index: 99;
+                box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            }
+
+            .toolbar-aligned {
+                padding: 20px 0 10px 0;
+            }
+
+            .fullscreen {
+                position: fixed;
+                top: 0;
+                right: 0;
+                left: 250px;
+                background-color: #fdfefe;
+            }
+
+            #fornecedor-form-container {
+                background-color: #ffffff;
+                padding: 50px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                width: 90%;
+                max-width: 800px;
+                margin: 30px auto;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            #fornecedor-form-container h:form {
+                display: flex;
+                flex-direction: column;
+            }
+
+            #fornecedor-form-container .ui-messages,
+            #fornecedor-form-container .ui-growl {
+                margin-bottom: 20px;
+                border-radius: 4px;
+                padding: 10px 15px;
+            }
+
+            #fornecedor-form-container .ui-messages-info-summary,
+            #fornecedor-form-container .ui-growl-item-container.ui-growl-info {
+                background-color: #e6f9ec !important;
+                color: #155724 !important;
+                border: 1px solid #c3e6cb !important;
+            }
+
+            #fornecedor-form-container .ui-messages-warn-summary,
+            #fornecedor-form-container .ui-growl-item-container.ui-growl-warn {
+                background-color: #fffbeb !important;
+                color: #85640c !important;
+                border: 1px solid #ffeeba !important;
+            }
+
+            #fornecedor-form-container .ui-messages-error-summary,
+            #fornecedor-form-container .ui-growl-item-container.ui-growl-error {
+                background-color: #fdecea !important;
+                color: #721c24 !important;
+                border: 1px solid #f5c6cb !important;
+            }
+
+            #fornecedor-form-container .ui-panelgrid {
+                width: 100%;
+                margin-bottom: 25px;
+                display: grid;
+                grid-template-columns: auto 1fr;
+                gap: 10px 15px;
+            }
+
+            #fornecedor-form-container .ui-panelgrid td {
+                padding: 8px 0;
+            }
+
+            #fornecedor-form-container .ui-panelgrid label {
+                font-weight: 500;
+                color: #495057;
+                align-self: center;
+            }
+
+            #fornecedor-form-container .ui-panelgrid .ui-inputfield {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                box-sizing: border-box;
+                font-size: 1rem;
+            }
+
+            #fornecedor-form-container .ui-panelgrid .ui-inputfield:focus {
+                border-color: #007bff;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                outline: none;
+            }
+
+            #fornecedor-form-container .ui-panelgrid .ui-inputfield.ui-state-error {
+                border-color: #dc3545;
+                box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+            }
+
+            #fornecedor-form-container br {
+                display: none;
+            }
+
+            #fornecedor-form-container .ui-button {
+                padding: 12px 20px;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 1.1rem;
+                transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
+
+            #fornecedor-form-container .salvar-button {
+                background-color: #28a745;
+                color: white;
+            }
+
+            #fornecedor-form-container .salvar-button:hover {
+                background-color: #218838;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            }
+
+            #fornecedor-form-container .salvar-button:active {
+                box-shadow: 0 0 0;
+            }
+
+            #fornecedor-form-container .cancelar-button {
+                background-color: #f8d7da;
+                color: red;
+                margin-left: 15px;
+                border: 1px solid #f5c6cb;
+            }
+
+            #fornecedor-form-container .cancelar-button:hover {
+                background-color: #f1b9c2;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                border-color: #ed96a5;
+                color: red;
+            }
+
+            #fornecedor-form-container .cancelar-button:active {
+                box-shadow: 0 0 0;
+                color: red;
+            }
+
+            @media (max-width: 768px) {
+                #fornecedor-form-container {
+                    width: 95%;
+                    padding: 20px;
+                    margin: 20px auto;
+                }
+
+                #fornecedor-form-container .ui-panelgrid {
+                    grid-template-columns: 1fr;
+                    gap: 8px;
+                }
+
+                #fornecedor-form-container .ui-panelgrid label {
+                    margin-bottom: 3px;
+                }
+
+                #fornecedor-form-container .ui-button {
+                    width: 100%;
+                    margin-left: 0 !important;
+                    margin-top: 10px;
+                }
+
+                .sidebar {
+                    position: relative;
+                    width: 100%;
+                    height: auto;
+                    padding-top: 10px;
+                    box-shadow: none;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: 10px;
+                }
+                .menu-link,
+                .submenu-toggle,
+                .submenu-link {
+                    width: auto;
+                    padding: 10px 15px;
+                    font-size: 16px;
+                    border-radius: 6px;
+                }
+                .submenu {
+                    margin-left: 0;
+                    width: 100%;
+                }
+                .content {
+                    margin-left: 0;
+                    padding: 10px;
+                }
+                .footer {
+                    width: 100%;
+                    left: 0;
+                }
+
+                #venda-form-container {
+                    background-color: #ffffff;
+                    border-radius: 10px;
+                    padding: 20px;
+                    margin: 20px auto;
+                    max-width: 800px;
+                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                }
+
+                /* Título da tela */
+                #venda-form-container h2 {
+                    text-align: center;
+                    color: #333333;
+                    margin-bottom: 20px;
+                }
+
+                /* Título da tabela de carrinho */
+                #venda-form-container h3 {
+                    margin-top: 30px;
+                    color: #444;
+                }
+            }
+        </style>
+    </h:head>
+
+    <body>
+        <div class="container">
+            <div class="sidebar">
+                <h2>Menu</h2>
+                <h:form>
+                    <h:link outcome="/index.xhtml" styleClass="submenu-link">
+                        <i class="fas fa-home"></i> Início
+                    </h:link>   
+
+                    <div class="submenu-container">
+                        <button type="button" class="submenu-toggle">
+                            <i class="fas fa-folder"></i> Cadastros
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </button>
+                        <div class="submenu">
+                            <h:link outcome="/Produto/produtolista.xhtml" styleClass="submenu-link">
+                                <i class="fas fa-box"></i>Produto
+                            </h:link>
+                            <h:link outcome="/Cliente/clientelista.xhtml" styleClass="submenu-link">
+                                <i class="fas fa-users"></i>Cliente
+                            </h:link>
+
+                            <h:link outcome="/Fornecedor/fornecedorlista.xhtml" styleClass="submenu-link">
+                                <i class="fas fa-truck"></i>Fornecedor
+                            </h:link>
+
+                            <h:link outcome="/Estado/estadolista.xhtml" styleClass="submenu-link">
+                                <i class="fas fa-flag"></i>Estado
+                            </h:link>
+                            <h:link outcome="/Cidade/cidadelista.xhtml" styleClass="submenu-link">
+                                <i class="fas fa-city"></i>Cidade
+                            </h:link>
+                            <h:link outcome="/Funcionario/funcionariolista.xhtml" styleClass="submenu-link">
+                                <i class="fas fa-user-tie"></i>Funcionario
+                            </h:link>
+                        </div>
+                    </div>
+                    <div class="submenu-container">
+                        <button type="button" class="submenu-toggle">
+                            <i class="fas fa-folder"></i> Movimentos
+                            <i class="fas fa-chevron-down toggle-icon"></i>                
+                        </button>
+                        <div class="submenu">
+                            <h:link outcome="/Venda/venda.xhtml" styleClass="submenu-link">
+                                <i class="fas fa-box"></i>Venda
+                            </h:link>
+                        </div>
+                    </div>
+                </h:form>
+            </div>
+
+            <div class="content">
+                <div class="listadeproduto">
+                    <div class="fullscreen">
+
+                        <ui:insert name="body" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2025 Sistema de Estoque | Desenvolvido por Fênix AutoPeças </p>
+        </footer>
+
+        <script>
+            //seleciona todos os elementos HTML que possuem classe submenu-toggle
+            //para cada elemento encontrado com .submenu-toggle, ele vai executar a proxima função
+            document.querySelectorAll('.submenu-toggle').forEach(button => {
+                //adiciona um ouvinte de evento ao botão.
+                //quando o usuário clica nesse botão, o que está dentro da função será executado
+                button.addEventListener('click', () => {
+                    //obtém o elemento pai do botão.
+                    //supõe - se que o pai contenha o submenu que será aberto / fechado.
+                    const container = button.parentElement;
+                    container.classList.toggle('active');
+                    //Alterna a classe active no elemento pai, Se o pai tiver a classe active, ela é removida,
+                    //se não tiver, ela é adicionada
+                });
+            });
+        </script>
+    </body>
+</html>

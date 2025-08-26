@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <title>Cadastro de Usuário</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
+
+    
+    <!-- o cadastro de usuario ainda nao funciona como deveria, ele cadastra e tudo, porem nao
+         persiste no banco de dados, entao o usuario cadastrado nao consegue fazer o login, mas
+         para permitir que ele entre no sistema pelo menos, eu defini um nome e senha fixo no controlador-->
+    
+    
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #2980b9, #6dd5fa);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-box {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            width: 500%;
+            max-width: 450px;
+        }
+
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .form-group .pi {
+            margin-right: 5px;
+        }
+
+        .form-group a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .form-group a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <h:form>
+        <div class="login-box">
+            <h2><i class="pi pi-user-plus"></i> Cadastro de Usuário</h2>
+
+            <p:messages id="msgs" showDetail="true" closable="true" />
+
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <p:inputText id="nome" value="#{usuarioControle.usuario.nome}" required="true" requiredMessage="Nome é obrigatório" style="width: 100%;" />
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <p:inputText id="email" value="#{usuarioControle.usuario.email}" required="true" requiredMessage="Email é obrigatório" style="width: 100%;" />
+            </div>
+
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <p:password id="senha" value="#{usuarioControle.usuario.senha}" required="true" feedback="true" requiredMessage="Senha é obrigatória" style="width: 100%;" />
+            </div>
+
+            <div class="form-group" style="text-align: center;">
+                <p:commandButton value="Salvar" icon="pi pi-save" action="#{usuarioControle.salvar}" update="msgs" styleClass="ui-button-primary" style="width: 100%;" />
+            </div>
+
+            <div class="form-group" style="text-align: center;">
+                <h:link outcome="/Login/login.xhtml">
+                    <i class="pi pi-sign-in"></i> Voltar para o Login
+                </h:link>
+            </div>
+        </div>
+    </h:form>
+
+    <footer class="footer">
+        <p>© 2025 Sistema de Estoque | Desenvolvido por Fênix AutoPeças</p>
+    </footer>
+</h:body>
+</html>

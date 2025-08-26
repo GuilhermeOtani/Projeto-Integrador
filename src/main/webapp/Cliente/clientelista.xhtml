@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/index.xhtml">
+        <ui:define name="body">
+            <f:view locale="pt_BR" />
+            
+            <!-- Formulário de Cadastro de Clientes -->
+                <h:form id="formClientes"> <!-- agrupa todos os elementos da tela do jsf -->
+                <p:growl id="messages" showDetail="true"/>
+
+                <div class="content">
+                    <div class="container-fluid"> <!-- move o botao de novo para baixo-->
+                        
+
+                        <!-- Tabela de Clientes -->
+                        <!-- o id serve para identificar unicamente a tabela dentro do jsf e ajuda
+                        a exibir as mensagens corretamente do p:growl-->
+                        
+                        <!-- chama a lista do controlador, o widgetvar  cria um widget acessível
+                        no navegador, o que permite interagir com a tabela diretamente usando 
+                        recursos do primefaces. -->
+                        <p:dataTable id="tabelaClientes" value="#{clienteControle.listCliente}" var="cli"
+                                     emptyMessage="Nenhum cliente cadastrado!"
+                                     widgetVar="tabelaClientes" 
+                                     styleClass="ui-datatable-responsive"
+                                     scrollable="true"
+                                     scrollHeight="520px"
+                                     >
+
+                            <p:column headerText="Nome" width="180" filterBy="#{cli.nome}" filterMatchMode="contains"
+                                      sortable="true" style="text-align: center;">
+                                #{cli.nome}
+                            </p:column>
+                            <p:column headerText="CPF" width="130" filterBy="#{cli.cpf}" filterMatchMode="contains"
+                                      sortable="true" style="text-align: center;">
+                                #{cli.cpf}
+                            </p:column>
+                            <p:column headerText="RG" width="160" filterBy="#{cli.rg}" filterMatchMode="contains"
+                                      sortable="true" style="text-align: center;">
+                                #{cli.rg}
+                            </p:column>
+                            <p:column headerText="Telefone" width="160" sortable="true" style="text-align: center;">
+                                #{cli.telefone}
+                            </p:column>
+                            <p:column headerText="Endereço" width="160" sortable="true" style="text-align: center;">
+                                #{cli.endereco}
+                            </p:column>
+                            <p:column headerText="Cidade" width="100" sortable="true" style="text-align: center;">
+                                #{cli.cidade.nome}
+                            </p:column>
+                            <p:column headerText="Operações" width="180" style="text-align: center">
+                                <div class="action-buttons">
+                                    <p:commandButton icon="pi pi-pencil"
+                                                     styleClass="ui-button-warning"
+                                                     actionListener="#{clienteControle.editar(cli)}"
+                                                     ajax="false"
+                                                     immediate="true"
+                                                     action="clienteedita"
+                                                     title="Editar"/>
+
+                                    <p:commandButton icon="pi pi-trash"
+                                                     styleClass="ui-button-danger"
+                                                     title="Excluir"
+                                                     onclick="PF('confirmDialog').show();">
+                                        <f:setPropertyActionListener target="#{clienteControle.clienteSelecionado}" value="#{cli}"/>
+                                    </p:commandButton>
+                                </div>
+                            </p:column>
+                        </p:dataTable>
+                        <!-- Barra de ferramentas -->
+                        <!-- Faz uma barra de ferramentas com o botão novo
+                        e chama o metodo para criar um cliente novo do cliente controlador,
+                        ajax para atualizar a página toda e não so uma parte dela,
+                        update atualiza o componente messages-->
+                        <p:toolbar>
+                            <p:toolbarGroup>
+                                <p:commandButton value="Novo Cliente"
+                                                 action="clienteedita"
+                                                 actionListener="#{clienteControle.novo()}"
+                                                 update=":formClientes:messages"
+                                                 ajax="false" />
+                            </p:toolbarGroup>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </h:form>
+
+            <!-- Confirmar Exclusão -->
+            <p:dialog header="Confirmar Exclusão"
+                      widgetVar="confirmDialog"
+                      modal="true"
+                      showEffect="fade"
+                      hideEffect="fade"
+                      resizable="false"
+                      id="dialogConfirmacao"
+                      appendTo="@(body)">
+
+                <h:form id="formConfirmacao">
+                    <p:outputPanel id="painelConfirmacao" style="text-align: center;">
+                        <h:outputText value="Tem certeza que deseja excluir este cliente?" style="display: block; margin: 10px 0;" />
+
+                        <p:commandButton value="Sim" icon="pi pi-check"
+                                         action="#{clienteControle.remover}"
+                                         process="@this"
+                                         update=":formClientes:tabelaClientes"
+                                         oncomplete="PF('confirmDialog').hide(); $('.ui-widget-overlay').fadeOut();"
+                                         styleClass="ui-button-danger" 
+                                         style="margin-top: 15px;" 
+                                         />
+
+                        <p:commandButton value="Não" icon="pi pi-times"
+                                         onclick="PF('confirmDialog').hide();"
+                                         type="button"
+                                         styleClass="ui-button-secondary" />
+                    </p:outputPanel>
+                </h:form>
+            </p:dialog>
+
+        </ui:define>
+    </ui:composition>
+</html>

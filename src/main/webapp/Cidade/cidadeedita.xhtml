@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/index.xhtml">
+        <ui:define name="body">
+            <div id="fornecedor-form-container">
+
+                <h:form>
+                    <p:growl/>
+                    <p:panelGrid columns="2">
+                        Estado:<p:selectOneMenu value="#{cidadeControle.cidade.estado}"
+                                                converter="#{cidadeControle.estadoConverter}" style="width: 150px">
+                            <f:selectItems value="#{cidadeControle.listaEstados}" 
+                                           var="cid"
+                                           itemLabel="#{cid.nome}"
+                                           itemValue="#{cid}"/>
+                        </p:selectOneMenu>
+                        Nome:<p:inputText value="#{cidadeControle.cidade.nome}"
+                                          required="true"
+                                          requiredMessage="O nome é obrigatório!"
+                                          size="20"/>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton value="Salvar"
+                                     ajax="false"
+                                     actionListener="#{cidadeControle.salvar()}"
+                                     action="cidadelista"
+                                     style="margin-right: 440px"/>
+
+                    <p:commandButton value="Cancelar" action="cidadelista"
+                                     ajax="false" immediate="true"
+                                     style="background: red;"/>
+
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

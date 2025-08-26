@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/index.xhtml">
+        <ui:define name="body">
+            <div id="fornecedor-form-container">
+                <h:form>
+                    <p:growl/>
+                    <p:panelGrid columns="2">   
+                        Nome:<p:inputText value="#{fornecedorControle.fornecedor.nome}"
+                                          required="true"
+                                          requiredMessage="O nome é obrigatório!"
+                                          size="70"/>
+                        CNPJ:<p:inputText value="#{fornecedorControle.fornecedor.cnpj}"
+                                          required="true"
+                                          requiredMessage="O CNPJ é obrigatório!"
+                                          size="70"/>
+                        Email:<p:inputText value="#{fornecedorControle.fornecedor.email}" 
+                                           required="true"
+                                           requiredMessage="O email é obrigatório!"
+                                           size="70"/>
+                        Telefone:<p:inputText value="#{fornecedorControle.fornecedor.telefone}" 
+                                              required="true"
+                                              requiredMessage="O telefone é obrigatório!"
+                                              size="70"/>
+                        Endereço:<p:inputText value="#{fornecedorControle.fornecedor.endereco}" 
+                                              required="true"
+                                              requiredMessage="O endereço é obrigatório!"
+                                              size="70"/>    
+                        Cidade:<p:selectOneMenu value="#{fornecedorControle.fornecedor.cidade}"
+                                                converter="#{fornecedorControle.cidadeConverter}" style="width: 140px">
+                            <f:selectItems value="#{fornecedorControle.listaCidade}" 
+                                           var="cid"
+                                           itemLabel="#{cid.nome}"
+                                           itemValue="#{cid}"
+                                           />
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton value="Salvar"
+                                     ajax="false"
+                                     actionListener="#{fornecedorControle.salvar}"
+                                     action="fornecedorlista"
+                                     style="margin-right: 440px"/>
+                    <p:commandButton value="Cancelar" action="fornecedorlista"
+                                     ajax="false" immediate="true"
+                                     style="background-color: red"/>
+
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>
+
+

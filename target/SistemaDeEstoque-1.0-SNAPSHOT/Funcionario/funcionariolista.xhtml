@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/index.xhtml">
+        <ui:define name="body">
+            <f:view locale="pt_BR" />
+            
+            <!-- Formulário de Cadastro de Funcionarios -->
+                <h:form id="formFuncionarios"> <!-- agrupa todos os elementos da tela do jsf -->
+                <p:growl id="messages" showDetail="true"/>
+
+                <div class="content">
+                    <div class="container-fluid"> <!-- move o botao de novo para baixo-->
+                        
+
+                        <!-- Tabela de Funcionarios -->
+                        <!-- o id serve para identificar unicamente a tabela dentro do jsf e ajuda
+                        a exibir as mensagens corretamente do p:growl-->
+                        
+                        <!-- chama a lista do controlador, o widgetvar  cria um widget acessível
+                        no navegador, o que permite interagir com a tabela diretamente usando 
+                        recursos do primefaces. -->
+                        <p:dataTable id="tabelaFuncionarios" value="#{funcionarioControle.listFuncionario}" var="func"
+                                     emptyMessage="Nenhum funcionario cadastrado!"
+                                     widgetVar="tabelaFuncionarios" 
+                                     styleClass="ui-datatable-responsive"
+                                     scrollable="true"
+                                     scrollHeight="520px"
+                                     >
+
+                            <p:column headerText="Nome" width="180" filterBy="#{func.nome}" filterMatchMode="contains"
+                                      sortable="true" style="text-align: center;">
+                                #{func.nome}
+                            </p:column>
+                            <p:column headerText="CPF" width="130" filterBy="#{func.cpf}" filterMatchMode="contains"
+                                      sortable="true" style="text-align: center;">
+                                #{func.cpf}
+                            </p:column>
+                            <p:column headerText="Telefone" width="160" sortable="true" style="text-align: center;">
+                                #{func.telefone}
+                            </p:column>
+                            <p:column headerText="Endereço" width="160" sortable="true" style="text-align: center;">
+                                #{func.endereco}
+                            </p:column>
+                            <p:column headerText="Cidade" width="100" sortable="true" style="text-align: center;">
+                                #{func.cidade.nome}
+                            </p:column>
+                            <p:column headerText="Operações" width="180" style="text-align: center">
+                                <div class="action-buttons">
+                                    <p:commandButton icon="pi pi-pencil"
+                                                     styleClass="ui-button-warning"
+                                                     actionListener="#{funcionarioControle.editar(func)}"
+                                                     ajax="false"
+                                                     immediate="true"
+                                                     action="funcionarioedita"
+                                                     title="Editar"/>
+
+                                    <p:commandButton icon="pi pi-trash"
+                                                     styleClass="ui-button-danger"
+                                                     title="Excluir"
+                                                     onclick="PF('confirmDialog').show();">
+                                        <f:setPropertyActionListener target="#{funcionarioControle.funcionarioSelecionado}" value="#{func}"/>
+                                    </p:commandButton>
+                                </div>
+                            </p:column>
+                        </p:dataTable>
+                        <!-- Barra de ferramentas -->
+                        <!-- Faz uma barra de ferramentas com o botão novo
+                        e chama o metodo para criar um funcionarios novo do funcionarios controlador,
+                        ajax para atualizar a página toda e não so uma parte dela,
+                        update atualiza o componente messages-->
+                        <p:toolbar>
+                            <p:toolbarGroup>
+                                <p:commandButton value="Novo Funcionario"
+                                                 action="funcionarioedita"
+                                                 actionListener="#{funcionarioControle.novo()}"
+                                                 update=":formFuncionarios:messages"
+                                                 ajax="false" />
+                            </p:toolbarGroup>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </h:form>
+
+            <!-- Confirmar Exclusão -->
+            <p:dialog header="Confirmar Exclusão"
+                      widgetVar="confirmDialog"
+                      modal="true"
+                      showEffect="fade"
+                      hideEffect="fade"
+                      resizable="false"
+                      id="dialogConfirmacao"
+                      appendTo="@(body)">
+
+                <h:form id="formConfirmacao">
+                    <p:outputPanel id="painelConfirmacao" style="text-align: center;">
+                        <h:outputText value="Tem certeza que deseja excluir este funcionario?" style="display: block; margin: 10px 0;" />
+
+                        <p:commandButton value="Sim" icon="pi pi-check"
+                                         action="#{funcionarioControle.remover}"
+                                         process="@this"
+                                         update=":formFuncionarios:tabelaFuncionarios"
+                                         oncomplete="PF('confirmDialog').hide(); $('.ui-widget-overlay').fadeOut();"
+                                         styleClass="ui-button-danger" 
+                                         style="margin-top: 15px;" 
+                                         />
+
+                        <p:commandButton value="Não" icon="pi pi-times"
+                                         onclick="PF('confirmDialog').hide();"
+                                         type="button"
+                                         styleClass="ui-button-secondary" />
+                    </p:outputPanel>
+                </h:form>
+            </p:dialog>
+
+        </ui:define>
+    </ui:composition>
+</html>

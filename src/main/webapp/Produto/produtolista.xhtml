@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/index.xhtml">
+        <ui:define name="body">
+            <f:view locale="pt_BR" />
+            <h:form id="formProdutos">
+                <p:growl id="messages" showDetail="true"/>
+
+                <div class="content">
+                    <div class="container-fluid"> <!-- move o botao de novo para baixp-->
+
+
+
+                        <p:dataTable id="tabelaProdutos" value="#{produtoControle.listaProduto}" var="pro"
+                                     emptyMessage="Nenhum produto cadastrado!"
+                                     widgetVar="tabelaProdutos"
+                                     styleClass="ui-datatable-responsive"
+                                     scrollable="true"
+                                     scrollHeight="520px"
+                                     >
+
+                            <p:column headerText="Nome" width="200" filterBy="#{pro.nome}" filterMatchMode="contains"
+                                      sortable="true" style="text-align: center;">
+                                #{pro.nome}
+                            </p:column>
+                            <p:column headerText="Código" width="150" filterBy="#{pro.codigo}" filterMatchMode="contains"
+                                      sortable="true" style="text-align: center;">
+                                #{pro.codigo}
+                            </p:column>
+                            <p:column headerText="Fornecedor" width="180" filterBy="#{pro.fornecedor}" filterMatchMode="contains"
+                                      sortable="true" style="text-align: center;">
+                                #{pro.fornecedor.nome}
+                            </p:column>
+                            <p:column headerText="Localização" width="100" filterBy="#{pro.localizaco}" filterMatchMode="contains"
+                                      sortable="true" style="text-align: center;">
+                                #{pro.localizaco}
+                            </p:column>
+                            <p:column headerText="Estoque" width="180" style="text-align: center;">
+                                #{pro.estoque}
+                            </p:column>
+                            <p:column headerText="Valor Unitário" width="100"
+                                      sortable="true" style="text-align: center;">
+                                <h:outputText value="#{pro.valor}">
+                                    <f:convertNumber type="currency" currencySymbol="R$" minFractionDigits="2" maxFractionDigits="2" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Operações" width="180" style="text-align: center">            
+                                <div class="action-buttons">
+                                    <p:commandButton icon="pi pi-pencil"
+                                                     styleClass="ui-button-warning"
+                                                     actionListener="#{produtoControle.editar(pro)}"
+                                                     ajax="false"
+                                                     immediate="true"
+                                                     action="produtoedita"
+                                                     title="Editar"/>
+
+                                    <p:commandButton icon="pi pi-trash"
+                                                     styleClass="ui-button-danger"
+                                                     title="Excluir"
+                                                     onclick="PF('confirmDialog').show();">
+                                        <f:setPropertyActionListener target="#{produtoControle.produtoSelecionado}" value="#{pro}"/>
+                                    </p:commandButton>
+                                </div>
+                            </p:column>
+                        </p:dataTable>
+                        <p:toolbar>
+                            <p:toolbarGroup>
+                                <p:commandButton value="Novo Produto"
+                                                 action="produtoedita"
+                                                 actionListener="#{produtoControle.novo()}"
+                                                 update=":formProdutos:messages"
+                                                 ajax="false" 
+                                                 />
+                            </p:toolbarGroup>
+                        </p:toolbar>
+
+                    </div> 
+                </div> 
+            </h:form>
+            <!-- confirmar exclusão -->
+            <p:dialog header="Confirmar Exclusão"
+                      widgetVar="confirmDialog"
+                      modal="true" 
+                      showEffect="fade"
+                      hideEffect="fade"
+                      resizable="false"
+                      id="dialogConfirmacao"
+                      appendTo="@(body)"> <!--evita overlays quebrados e o model bloqueia 
+                                              as interações com o fundo-->
+
+                <h:form id="formConfirmacao"> <!-- identificador para o formulatrio -->
+
+                    <!-- define o identificador do painel -->
+                    <p:outputPanel id="painelConfirmacao" style="text-align: center;">
+                        <h:outputText value="Tem certeza que deseja excluir este produto?" style="display: block;" />
+
+
+                        <!-- oncomplete é para fechar a tela depois que a ação for concluida
+                             process serve para que apenas o botao em especifico sera processado, 
+                             outros componentes nao funcionarao-->
+                        <p:commandButton value="Sim" icon="pi pi-check"
+                                         action="#{produtoControle.remover}"
+                                         process="@this"
+                                         update=":formProdutos:tabelaProdutos"
+                                         oncomplete="PF('confirmDialog').hide(); $('.ui-widget-overlay').fadeOut();" 
+                                         styleClass="ui-button-danger" 
+                                         style="margin-top: 15px;" />
+
+                        <p:commandButton value="Não" icon="pi pi-times"
+                                         onclick="PF('confirmDialog').hide();"
+                                         type="button"
+                                         styleClass="ui-button-secondary"
+                                         style="margin-top: 10px; margin-left: 10px;" />
+                    </p:outputPanel>
+
+                </h:form>
+            </p:dialog>
+
+        </ui:define>
+    </ui:composition>
+</html> 
