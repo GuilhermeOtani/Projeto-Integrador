@@ -4,6 +4,7 @@ import Converter.CidadeConverter;
 import Converter.FornecedorConverter;
 import Entidade.Cidade;
 import Entidade.Fornecedor;
+import Entidade.Fornecedor;
 import Facade.CidadeFacade;
 import Facade.FornecedorFacade;
 import java.io.Serializable;
@@ -11,6 +12,9 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
 
 @ManagedBean
 @SessionScoped
@@ -39,10 +43,10 @@ public class FornecedorControle implements Serializable {
         this.cidadeConverter = cidadeConverter;
     }
 
-    
     public void salvar() {
-       fornecedorfacade.salvar(fornecedor);
+        fornecedorfacade.salvar(fornecedor);
         fornecedor = new Fornecedor();
+        System.out.println("fornecedorCUUUUUUUUUUUUUUUU" + fornecedor.getNome() + fornecedor.getCnpj());
     }
 
     public void remover() {
@@ -84,4 +88,32 @@ public class FornecedorControle implements Serializable {
         return fornecedorfacade.listaTodos();
 
     }
+
+    public Converter getFornecedorConverter() {
+        return new Converter() {
+            @Override
+            public Object getAsObject(FacesContext fc, UIComponent component, String value) {
+                System.out.println("FornecedorConverter getAsObject chamado com value: " + value);
+                if (value == null || value.isEmpty()) {
+                    return null;
+                }
+                Fornecedor fornecedor = fornecedorfacade.buscarPorId(Long.valueOf(value));
+                System.out.println("Fornecedor encontrado: " + (fornecedor != null ? fornecedor.getNome() : "null"));
+                return fornecedor;
+            }
+
+            @Override
+            public String getAsString(FacesContext fc, UIComponent component, Object object) {
+                if (object == null) {
+                    return "";
+                }
+                if (object instanceof Fornecedor) {
+                    Fornecedor f = (Fornecedor) object;
+                    return f.getId() != null ? f.getId().toString() : "";
+                }
+                return "";
+            }
+        };
+    }
+
 }

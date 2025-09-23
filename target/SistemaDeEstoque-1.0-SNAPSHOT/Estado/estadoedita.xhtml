@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-    <ui:composition template="/index.xhtml">
+    <ui:composition template="/template.xhtml">
         <ui:define name="body">
             <div id="fornecedor-form-container">
                 <h:form>
@@ -22,14 +22,15 @@
 
                     </p:panelGrid>
                     <br/>
+                    
+                    <p:commandButton value="Cancelar" action="estadolista.xhtml?faces-redirect=true"
+                                     ajax="false" immediate="true"
+                                     style="background-color: red"/>
                     <p:commandButton value="Salvar"
                                      ajax="false"
                                      actionListener="#{estadoControle.salvar}"
-                                     action="estadolista"
-                                     style="margin-right: 440px"/>
-                    <p:commandButton value="Cancelar" action="estadolista"
-                                     ajax="false" immediate="true"
-                                     style="background-color: red"/>
+                                     action="estadolista.xhtml?faces-redirect=true"
+                                     style="margin-left: 440px"/>
                     
                 </h:form>
             </div>

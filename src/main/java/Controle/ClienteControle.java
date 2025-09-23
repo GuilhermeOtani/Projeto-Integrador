@@ -3,7 +3,6 @@ package Controle;
 import Converter.CidadeConverter;
 import Entidade.Cidade;
 import Entidade.Cliente;
-import Entidade.Produto;
 import Facade.CidadeFacade;
 import Facade.ClienteFacade;
 import java.io.Serializable;
@@ -94,10 +93,13 @@ public class ClienteControle implements Serializable {
         return new Converter() {
             @Override
             public Object getAsObject(FacesContext fc, UIComponent component, String value) {
+                System.out.println("ClienteConverter getAsObject chamado com value: " + value);
                 if (value == null || value.isEmpty()) {
                     return null;
                 }
-                return clientefacade.buscarPorId(Long.valueOf(value));
+                Cliente cliente = clientefacade.buscarPorId(Long.valueOf(value));
+                System.out.println("Cliente encontrado: " + (cliente != null ? cliente.getNome() : "null"));
+                return cliente;
             }
 
             @Override

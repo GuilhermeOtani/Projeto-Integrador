@@ -1,22 +1,43 @@
 package Entidade;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Venda implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataVenda;
     @ManyToOne
     private Cliente cliente;
+    @Column(name = "ValorTotal")
+    private BigDecimal valorTotal;
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            mappedBy = "venda")
+    private List<ItemVenda> itemVendas;
 
-    @ManyToOne
-    private Produto produto;
-
-    private int quantidade;
+    public Venda() {
+        itemVendas = new ArrayList<>();
+        dataVenda = new Date();
+    }
 
     public Long getId() {
         return id;
@@ -24,6 +45,14 @@ public class Venda implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Date getDataVenda() {
+        return dataVenda;
+    }
+
+    public void setDataVenda(Date dataVenda) {
+        this.dataVenda = dataVenda;
     }
 
     public Cliente getCliente() {
@@ -34,21 +63,28 @@ public class Venda implements Serializable {
         this.cliente = cliente;
     }
 
-    public Produto getProduto() {
-        return produto;
+    public BigDecimal calcularValorTotal() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (ItemVenda it : itemVendas) {
+            total = total.add(it.getSubTotal());
+        }
+        return total;
     }
 
-    public void setProduto(Produto produto) {
-        this.produto = produto;
+    public BigDecimal getValorTotal() {
+        return valorTotal;
     }
 
-    public int getQuantidade() {
-        return quantidade;
+    public void setValorTotal(BigDecimal valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
-    public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
+    public List<ItemVenda> getItensVendas() {
+        return itemVendas;
     }
 
-   
+    public void setItemVendas(List<ItemVenda> itemVendas) {
+        this.itemVendas = itemVendas;
+    }
+
 }

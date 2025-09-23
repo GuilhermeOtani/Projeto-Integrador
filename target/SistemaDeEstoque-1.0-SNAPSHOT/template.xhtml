@@ -2,11 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
     <h:head>
-        <title>Cadastro de Produto</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
         <h:outputStylesheet library="primefaces" name="primeicons/primeicons.css" />
 
@@ -33,25 +31,26 @@
             .sidebar {
                 width: 250px;
                 height: 100vh;
-                background-color: #2c3e50;
-                color: white;
+                background: linear-gradient(180deg, #2c3e50, #34495e);
+                color: #ecf0f1;
                 position: fixed;
                 top: 0;
                 left: 0;
                 display: flex;
                 flex-direction: column;
-                align-items: center;
                 padding-top: 35px;
-                gap: 20px;
-                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.25);
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                transition: all 0.3s ease;
             }
 
             .sidebar h2 {
                 font-size: 26px;
-                font-weight: 600;
-                margin-bottom: 20px;
-                color: #ecf0f1;
+                font-weight: 700;
+                margin-bottom: 25px;
+                color: #f1c40f;
+                text-transform: uppercase;
+                letter-spacing: 2px;
             }
 
             .menu-link,
@@ -61,54 +60,66 @@
                 align-items: center;
                 gap: 12px;
                 color: #ecf0f1;
-                font-size: 19px;
+                font-size: 17px;
                 width: 90%;
-                padding: 16px 16px;
-                border-radius: 8px;
+                padding: 14px 16px;
+                border-radius: 10px;
                 background: none;
                 border: none;
                 cursor: pointer;
                 text-decoration: none;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                transition: background 0.3s ease, transform 0.2s ease;
+                font-weight: 500;
+                transition: all 0.3s ease;
             }
+
 
             .menu-link:hover,
             .submenu-toggle:hover,
             .submenu-link:hover {
-                background-color: #34495e;
-                transform: translateX(5px);
+                background: linear-gradient(90deg, #1abc9c, #16a085);
+                color: #ffffff;
+                transform: translateX(8px);
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
             }
 
             /*container do submenu */
             .submenu-container {
                 width: 100%;
+                margin-top: 5px;
             }
 
             /* submenu escondido por padrão */
             .submenu {
                 max-height: 0;
                 overflow: hidden;
-                transition: max-height 0.3s ease;
+                transition: max-height 0.35s ease, padding 0.25s ease;
                 display: flex;
                 flex-direction: column;
-                margin-left: 20px; /* identa o submenu */
+                margin-left: 10px;
             }
 
             /* Quando ativo, submenu mostra */
             .submenu-container.active .submenu {
-                max-height: 500px; /* suficiente para mostrar todos links */
+                max-height: 600px;
+                padding: 5px 0;
             }
 
             /* Ícone da seta */
             .toggle-icon {
                 margin-left: auto;
+                font-size: 14px;
                 transition: transform 0.3s ease;
             }
 
             /* quando aberto, gira a seta */
             .submenu-container.active .toggle-icon {
                 transform: rotate(180deg);
+                color: #1abc9c;
+
+            }
+            .submenu-link:active,
+            .menu-link:active {
+                transform: scale(0.97);
             }
 
             .content {
@@ -385,14 +396,68 @@
                     color: #444;
                 }
             }
+            /* Logo no topo do sidebar */
+            .sidebar-logo {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                font-size: 22px;
+                font-weight: 700;
+                color: #f1c40f;
+                margin-bottom: 25px;
+                padding: 15px;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            }
+
+            /* Ícone da logo */
+            .sidebar-logo i {
+                font-size: 26px;
+                color: #e67e22;
+                animation: pulse 2s infinite;
+            }
+
+            /* Animação de brilho leve no texto */
+            .sidebar-logo span {
+                background: linear-gradient(90deg, #f39c12, #f1c40f, #f39c12);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                animation: shine 3s linear infinite;
+            }
+
+            @keyframes shine {
+                0% {
+                    background-position: 0%;
+                }
+                100% {
+                    background-position: 200%;
+                }
+            }
+
+            @keyframes pulse {
+                0%, 100% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+                50% {
+                    transform: scale(1.1);
+                    opacity: 0.8;
+                }
+            }
+
+
         </style>
     </h:head>
 
     <body>
         <div class="container">
             <div class="sidebar">
-                <h2>Menu</h2>
-                <h:form>
+                <div class="sidebar-logo">
+                    <i class="fas fa-feather-alt"></i> 
+                    <span>Fênix AutoPeças</span>
+                </div>                <h:form>
                     <h:link outcome="/index.xhtml" styleClass="submenu-link">
                         <i class="fas fa-home"></i> Início
                     </h:link>   
@@ -427,12 +492,15 @@
                     </div>
                     <div class="submenu-container">
                         <button type="button" class="submenu-toggle">
-                            <i class="fas fa-folder"></i> Movimentos
+                            <i class="fas fa-truck"></i> Movimentos
                             <i class="fas fa-chevron-down toggle-icon"></i>                
                         </button>
                         <div class="submenu">
                             <h:link outcome="/Venda/venda.xhtml" styleClass="submenu-link">
-                                <i class="fas fa-box"></i>Venda
+                                <i class="fas fa-dollar-sign"></i>Venda
+                            </h:link>
+                            <h:link outcome="/Compra/compra.xhtml" styleClass="submenu-link">
+                                <i class="fas fa-dollar-sign"></i> Compra
                             </h:link>
                         </div>
                     </div>

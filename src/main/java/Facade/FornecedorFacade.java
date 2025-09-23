@@ -1,5 +1,6 @@
 package Facade;
 
+import Entidade.Cliente;
 import Entidade.Fornecedor;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -22,6 +23,10 @@ public class FornecedorFacade extends AbstractFacade<Fornecedor> {
 
     public FornecedorFacade() {
         super(Fornecedor.class);
+    }
+
+    public Fornecedor buscarPorId(Long id) {
+        return em.find(Fornecedor.class, id);
     }
 
 }

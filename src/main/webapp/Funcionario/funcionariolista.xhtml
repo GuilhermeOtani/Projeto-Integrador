@@ -6,7 +6,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <ui:composition template="/index.xhtml">
+    <ui:composition template="/template.xhtml">
         <ui:define name="body">
             <f:view locale="pt_BR" />
             
@@ -57,7 +57,7 @@
                                                      actionListener="#{funcionarioControle.editar(func)}"
                                                      ajax="false"
                                                      immediate="true"
-                                                     action="funcionarioedita"
+                                                     action="funcionarioedita.xhtml?faces-redirect=true"
                                                      title="Editar"/>
 
                                     <p:commandButton icon="pi pi-trash"
@@ -77,7 +77,7 @@
                         <p:toolbar>
                             <p:toolbarGroup>
                                 <p:commandButton value="Novo Funcionario"
-                                                 action="funcionarioedita"
+                                                 action="funcionarioedita.xhtml?faces-redirect=true"
                                                  actionListener="#{funcionarioControle.novo()}"
                                                  update=":formFuncionarios:messages"
                                                  ajax="false" />

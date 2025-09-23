@@ -1,10 +1,73 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="/template.xhtml">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-    <ui:define name="body">
-    </ui:define>
 
-</ui:composition>
-    
+    <ui:composition template="/template.xhtml">
+        <ui:define name="body">
+
+
+            <h:form>
+                <p:panelGrid columns="4" styleClass="ui-fluid" columnClasses="ui-panelgrid-cell">
+
+                    <p:panel header="Total Vendas" style="text-align:center;">
+                        <h:outputText value="#{dashboardControle.totalVendas}" />
+                    </p:panel>
+
+                    <p:panel header="Total Compras" style="text-align:center;">
+                        <h:outputText value="#{dashboardControle.totalCompras}" />
+                    </p:panel>
+
+                    <p:panel header="Produtos Vendidos" style="text-align:center;">
+                        <h:outputText value="#{dashboardControle.totalProdutosVendidos}" />
+                    </p:panel>
+
+                    <p:panel header="Produtos Comprados" style="text-align:center;">
+                        <h:outputText value="#{dashboardControle.totalProdutosComprados}" />
+                    </p:panel>
+
+                </p:panelGrid>
+
+                <!-- Gráfico de barras -->
+                <p:panel header="Gráfico de Vendas x Compras" style="margin-top:20px;">
+                    <p:barChart id="barChart" model="#{dashboardControle.barChartModel}" 
+                                style="height:300px;" />
+
+                </p:panel>
+
+                <!-- Tabela com detalhes (opcional) -->
+                <p:panel header="Resumo de Vendas e Compras" style="margin-top:20px;">
+                    <p:dataTable value="#{vendaControle.venda.itensVendas}" var="iv" 
+                                 rendered="#{not empty vendaControle.venda.itensVendas}">
+                        <p:column headerText="Produto">
+                            <h:outputText value="#{iv.produto.nome}" />
+                        </p:column>
+                        <p:column headerText="Quantidade">
+                            <h:outputText value="#{iv.quantidade}" />
+                        </p:column>
+                        <p:column headerText="Subtotal">
+                            <h:outputText value="#{iv.subTotal}" />
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:dataTable value="#{compraControle.compra.itemCompras}" var="ic" 
+                                 rendered="#{not empty compraControle.compra.itemCompras}">
+                        <p:column headerText="Produto">
+                            <h:outputText value="#{ic.produto.nome}" />
+                        </p:column>
+                        <p:column headerText="Quantidade">
+                            <h:outputText value="#{ic.quantidade}" />
+                        </p:column>
+                        <p:column headerText="Subtotal">
+                            <h:outputText value="#{ic.subTotal}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

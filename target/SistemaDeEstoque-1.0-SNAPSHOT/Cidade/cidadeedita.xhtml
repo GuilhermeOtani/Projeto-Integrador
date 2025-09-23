@@ -6,7 +6,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <ui:composition template="/index.xhtml">
+    <ui:composition template="/template.xhtml">
         <ui:define name="body">
             <div id="fornecedor-form-container">
 
@@ -26,15 +26,16 @@
                                           size="20"/>
                     </p:panelGrid>
                     <br/>
+
+
+                    <p:commandButton value="Cancelar" action="cidadelista.xhtml?faces-redirect=true"
+                                     ajax="false" immediate="true"
+                                     style="background: red;"/>
                     <p:commandButton value="Salvar"
                                      ajax="false"
                                      actionListener="#{cidadeControle.salvar()}"
-                                     action="cidadelista"
-                                     style="margin-right: 440px"/>
-
-                    <p:commandButton value="Cancelar" action="cidadelista"
-                                     ajax="false" immediate="true"
-                                     style="background: red;"/>
+                                     action="cidadelista.xhtml?faces-redirect=true"
+                                     style="margin-left: 440px"/>
 
                 </h:form>
             </div>

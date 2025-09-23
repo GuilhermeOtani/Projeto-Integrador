@@ -33,8 +33,8 @@ public class ClienteFacade extends AbstractFacade<Cliente> {
         }
     }
 
-    public Produto buscarPorId(Long id) {
-        return em.find(Produto.class, id);
+    public Cliente buscarPorId(Long id) {
+        return em.find(Cliente.class, id);
     }
 
 }

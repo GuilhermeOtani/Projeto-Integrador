@@ -1,33 +1,41 @@
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Facade\UsuarioFacade.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Facade\ClienteFacade.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Entidade\Usuario.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Converter\CidadeConverter.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Converter\ClienteConverter.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Facade\FuncionarioFacade.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Controle\EstadoControle.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Entidade\Produto.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Converter\UsuarioConverter.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Entidade\Estado.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Entidade\Cidade.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Login\Login.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Entidade\ItemVenda.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Facade\CidadeFacade.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Converter\FuncionarioConverter.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Controle\FuncionarioControle.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Entidade\Funcionario.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Controle\CidadeControle.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Entidade\Venda.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Entidade\Fornecedor.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Converter\EstadoConverter.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Facade\AbstractFacade.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Facade\EstadoFacade.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Controle\ClienteControle.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Facade\ProdutoFacade.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Controle\FornecedorControle.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Controle\ProdutoControle.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Entidade\Cliente.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Facade\FornecedorFacade.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Converter\ProdutoConverter.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Controle\UsuarioControle.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Converter\FornecedorConverter.java
-C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\SistemaEstoque\src\main\java\Facade\VendaFacade.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\ProdutoControle.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Facade\FuncionarioFacade.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Converter\ProdutoConverter.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Entidade\ItemVenda.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Entidade\Usuario.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\CidadeControle.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Entidade\Cliente.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Facade\CompraFacade.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\ClienteControle.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\UsuarioControle.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Facade\AbstractFacade.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Entidade\Funcionario.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Facade\UsuarioFacade.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Converter\UsuarioConverter.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Entidade\Compra.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Facade\FornecedorFacade.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Converter\VendaConverter.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Facade\ProdutoFacade.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Entidade\Venda.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Converter\CompraConverter.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\DashboardControle.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\FornecedorControle.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\CompraControle.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\VendaControle.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Converter\CidadeConverter.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Converter\FornecedorConverter.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Facade\CidadeFacade.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Entidade\Cidade.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Converter\FuncionarioConverter.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Entidade\Estado.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Entidade\ItemCompra.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\EstadoControle.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Entidade\Fornecedor.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Facade\EstadoFacade.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Facade\VendaFacade.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Converter\ClienteConverter.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Login\Login.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Entidade\Produto.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\FuncionarioControle.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Converter\EstadoConverter.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Facade\ClienteFacade.java

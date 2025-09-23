@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <ui:define name="body">
+
+        <h:head>
+            <style>
+                .field {
+                    margin-bottom: 1.2rem;
+                }
+                .salvar-button {
+                    margin-top: 1rem;
+                    background-color: #2196F3;
+                    border: none;
+                    color: white;
+                }
+                .salvar-button:hover {
+                    background-color: #1976D2;
+                }
+            </style>
+        </h:head>
+
+        <h:form id="formCompra">
+
+            <p:growl id="msgs" showDetail="true" sticky="false" life="5000" globalOnly="true" />
+
+            <!-- VENDA -->
+            <p:panel header="Compra de Produtos" styleClass="p-fluid">
+                <div class="formgrid grid" style="gap: 1.5rem;">
+
+                    <!--CLIENTE -->
+                    <div class="field col-12 md:col-6">
+                        <p:outputLabel for="fornecedor" value="Fornecedor:" />
+                        <p:selectOneMenu id="fornecedor" value="#{compraControle.fornecedorSelecionado}" converter="#{fornecedorControle.fornecedorConverter}">
+                            <f:selectItem itemLabel="Selecione um fornecedor" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{compraControle.listaFornecedores}" var="f" itemLabel="#{f.nome}" itemValue="#{f}" />
+                        </p:selectOneMenu>
+                    </div>
+
+                    <!-- PRODUTO -->
+                    <div class="field col-12 md:col-6">
+                        <p:outputLabel for="produto" value="Produto:" />
+                        <p:selectOneMenu id="produto" value="#{compraControle.produtoSelecionado}" converter="#{produtoControle.produtoConverter}">
+                            <f:selectItem itemLabel="Selecione um produto" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{compraControle.listaProdutos}" var="p" itemLabel="#{p.nome}" itemValue="#{p}" />
+                            <p:ajax event="change" listener="#{produtoControle.carregarProdutoSelecionado}" update=":formCompra:detalhesProduto" />
+                        </p:selectOneMenu>
+                    </div>
+
+                    <!-- PREÇO DO PRODUTO -->
+                    <div class="field col-12 md:col-6">
+                        <p:outputLabel value="Preço:" />
+                        <h:panelGroup id="detalhesProduto">
+                            <h:outputText value="#{compraControle.produtoSelecionado.valor}">
+                                <f:convertNumber type="currency" currencySymbol="R$" />
+                            </h:outputText>
+                        </h:panelGroup>
+                    </div>
+
+                    <!-- QUANTIDADE -->
+                    <div class="field col-12 md:col-6">
+                        <p:outputLabel for="quantidade" value="Quantidade:" />
+                        <p:spinner id="quantidade" value="#{compraControle.itemCompra.quantidade}" min="1" />
+                    </div>
+
+                </div>
+
+                <!-- ADICIONAR -->
+                <p:commandButton value="Adicionar ao Carrinho"
+                                 actionListener="#{compraControle.adicionarItem}"
+                                 update=":formCompra:tabelaItens :formCompra:msgs"
+                                 styleClass="salvar-button" />
+            </p:panel>
+
+            <!-- TABELA DE ITENS -->
+            <p:panel header="Itens no Carrinho" styleClass="p-fluid" style="margin-top: 2rem;">
+                <p:dataTable id="tabelaItens" value="#{compraControle.compra.itemCompras}" var="item" style="width:100%">
+                    <p:column headerText="Fornecedor">
+                        #{compraControle.fornecedorSelecionado.nome}
+                    </p:column>
+                    <p:column headerText="Produto">
+                        #{item.produto.nome}
+                    </p:column>
+                    <p:column headerText="Preço">
+                        <h:outputText value="#{item.produto.valor}">
+                            <f:convertNumber type="currency" currencySymbol="R$" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Quantidade">
+                        #{item.quantidade}
+                    </p:column>
+                    <p:column headerText="Subtotal">
+                        <h:outputText value="#{item.subTotal}">
+                            <f:convertNumber type="currency" currencySymbol="R$" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Ações">
+                        <p:commandButton icon="pi pi-trash"
+                                         update=":formCompra:tabelaItens :formCompra:msgs"
+                                         actionListener="#{compraControle.removerItem(item)}"
+                                         styleClass="p-button-danger p-button-text" />                    
+                    </p:column>
+                </p:dataTable>
+
+                <!-- FINALIZAR -->
+                <p:commandButton value="Finalizar Compra"
+                                 actionListener="#{compraControle.finalizarCompra}"
+                                 update=":formCompra:tabelaItens :formCompra:msgs"
+                                 process="@form"
+                                 styleClass="salvar-button" />
+
+
+            </p:panel>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

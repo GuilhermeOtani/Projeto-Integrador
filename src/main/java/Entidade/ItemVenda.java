@@ -1,85 +1,68 @@
 package Entidade;
 
-
-import Facade.ProdutoFacade;
-import Facade.VendaFacade;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
+import java.math.BigDecimal;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
-@ManagedBean
-@SessionScoped
+@Entity
 public class ItemVenda implements Serializable {
 
-    private List<Venda> itens = new ArrayList<>();
-    private Cliente clienteSelecionado;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private int quantidade;
+    private BigDecimal preco;
+    @ManyToOne
+    private Produto produto;
+    @ManyToOne
+    private Venda venda;
 
-    @EJB
-    private VendaFacade vendaFacade;
-
-    @EJB
-    private ProdutoFacade produtoFacade;
-
-    public void adicionar(Produto produto, int quantidade) {
-    // Verifica se há estoque disponível
-    if (produto.getEstoque() < quantidade) {
-        FacesContext.getCurrentInstance().addMessage(null, 
-            new FacesMessage(FacesMessage.SEVERITY_WARN,
-                             "Estoque insuficiente",
-                             "Produto: " + produto.getNome() + " possui apenas " + produto.getEstoque() + " unidades."));
-        return;
+    public BigDecimal getSubTotal() {
+        return preco.multiply(new BigDecimal(quantidade));
     }
 
-    for (Venda item : itens) {
-        if (item.getProduto().equals(produto)) {
-            int novaQuantidade = item.getQuantidade() + quantidade;
-
-            if (produto.getEstoque() < novaQuantidade) {
-                FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_WARN,
-                                     "Estoque insuficiente",
-                                     "Produto: " + produto.getNome() + " possui apenas " + produto.getEstoque() + " unidades."));
-                return;
-            }
-
-            item.setQuantidade(novaQuantidade);
-            return;
-        }
+    public Long getId() {
+        return id;
     }
 
-    Venda novo = new Venda();
-    novo.setProduto(produto);
-    novo.setCliente(clienteSelecionado);
-    novo.setQuantidade(quantidade);
-    itens.add(novo);
-}
-
-    public void finalizarCompra() {
-        for (Venda item : itens) {
-            Produto produto = item.getProduto();
-            int novoEstoque = produto.getEstoque() - item.getQuantidade();
-            if (novoEstoque < 0) {
-                throw new RuntimeException("Estoque insuficiente para: " + produto.getNome());
-            }
-            produto.setEstoque(novoEstoque);
-            produtoFacade.salvar(produto); // atualiza estoque
-            vendaFacade.salvar(item);   // salva item no banco 
-        }
-        itens.clear(); // limpa carrinho
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public List<Venda> getItens() { return itens; }
-
-    public Cliente getClienteSelecionado() { return clienteSelecionado; }
-    public void setClienteSelecionado(Cliente clienteSelecionado) {
-        this.clienteSelecionado = clienteSelecionado;
+    public int getQuantidade() {
+        return quantidade;
     }
-    
 
-    
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public BigDecimal getPreco() {
+        return preco;
+    }
+
+    public void setPreco(BigDecimal preco) {
+        this.preco = preco;
+    }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    public Venda getVenda() {
+        return venda;
+    }
+
+    public void setVenda(Venda venda) {
+        this.venda = venda;
+    }
+
 }

@@ -6,7 +6,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <ui:composition template="/index.xhtml">
+    <ui:composition template="/template.xhtml">
         <ui:define name="body">
             <f:view locale="pt_BR" />
             <h:form id="formProdutos">
@@ -42,8 +42,15 @@
                                 #{pro.localizaco}
                             </p:column>
                             <p:column headerText="Estoque" width="180" style="text-align: center;">
-                                #{pro.estoque}
+                                <h:outputText value="#{pro.estoque}"
+                                              style="
+                                              #{pro.estoque lt 5 ? 'background-color: rgba(231, 76, 60, 0.3); color: #c0392b; font-weight: bold; padding: 4px 8px; border-radius: 4px;' : 
+                                                (pro.estoque ge 5 and pro.estoque le 10 ? 'background-color: rgba(241, 196, 15, 0.3); color: #b7950b; font-weight: bold; padding: 4px 8px; border-radius: 4px;' : 
+                                                'background-color: rgba(46, 204, 113, 0.3); color: #27ae60; font-weight: bold; padding: 4px 8px; border-radius: 4px;')}"
+                                              />
                             </p:column>
+
+
                             <p:column headerText="Valor Unitário" width="100"
                                       sortable="true" style="text-align: center;">
                                 <h:outputText value="#{pro.valor}">
@@ -58,7 +65,7 @@
                                                      actionListener="#{produtoControle.editar(pro)}"
                                                      ajax="false"
                                                      immediate="true"
-                                                     action="produtoedita"
+                                                     action="produtoedita.xhtml?faces-redirect=true"
                                                      title="Editar"/>
 
                                     <p:commandButton icon="pi pi-trash"
@@ -73,7 +80,7 @@
                         <p:toolbar>
                             <p:toolbarGroup>
                                 <p:commandButton value="Novo Produto"
-                                                 action="produtoedita"
+                                                 action="produtoedita.xhtml?faces-redirect=true"
                                                  actionListener="#{produtoControle.novo()}"
                                                  update=":formProdutos:messages"
                                                  ajax="false" 

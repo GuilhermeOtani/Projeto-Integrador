@@ -31,5 +31,9 @@ public class ProdutoFacade extends AbstractFacade<Produto> {
     public Produto buscarPorId(Long id) {
         return em.find(Produto.class, id);
     }
+
+    public Long totalProdutosEstoque() {
+        return em.createQuery("SELECT COALESCE(SUM(p.estoque),0) FROM Produto p", Long.class)
+                .getSingleResult();
+    }
 }
-    
