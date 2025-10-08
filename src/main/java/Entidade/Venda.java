@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 public class Venda implements Serializable {
@@ -25,17 +27,17 @@ public class Venda implements Serializable {
     private Long id;
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataVenda;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Cliente cliente;
     @Column(name = "ValorTotal")
     private BigDecimal valorTotal;
     @OneToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
-            mappedBy = "venda")
-    private List<ItemVenda> itemVendas;
+            mappedBy = "venda",fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
+    private List<ItemVenda> itensVendas;
 
     public Venda() {
-        itemVendas = new ArrayList<>();
+        itensVendas = new ArrayList<>();
         dataVenda = new Date();
     }
 
@@ -65,7 +67,7 @@ public class Venda implements Serializable {
 
     public BigDecimal calcularValorTotal() {
         BigDecimal total = BigDecimal.ZERO;
-        for (ItemVenda it : itemVendas) {
+        for (ItemVenda it : itensVendas) {
             total = total.add(it.getSubTotal());
         }
         return total;
@@ -80,11 +82,11 @@ public class Venda implements Serializable {
     }
 
     public List<ItemVenda> getItensVendas() {
-        return itemVendas;
+        return itensVendas;
     }
 
     public void setItemVendas(List<ItemVenda> itemVendas) {
-        this.itemVendas = itemVendas;
+        this.itensVendas = itemVendas;
     }
 
 }

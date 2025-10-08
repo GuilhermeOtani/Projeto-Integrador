@@ -2,6 +2,7 @@ package Facade;
 
 import Entidade.Produto;
 import Entidade.Compra;
+import Entidade.Venda;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -19,6 +20,13 @@ public class CompraFacade extends AbstractFacade<Compra> {
         return em;
     }
 
+    public List<Compra> findAll() {
+        return em.createQuery(
+                "SELECT DISTINCT c FROM Compra c LEFT JOIN FETCH c.itemCompras i LEFT JOIN FETCH i.produto", Compra.class)
+                .getResultList();
+
+    }
+
     public CompraFacade() {
         super(Compra.class);
     }
@@ -29,8 +37,12 @@ public class CompraFacade extends AbstractFacade<Compra> {
                 .executeUpdate();
     }
 
+    // Buscar vendas que tenham um item com determinado produto
     public List<Compra> itensPorProduto(Produto produto) {
-        return em.createQuery("SELECT c FROM Compra c WHERE c.produto = :produto", Compra.class)
+        return em.createQuery(
+                "SELECT DISTINCT c FROM Compra c "
+                + "JOIN v.itemCompras i "
+                + "WHERE i.produto = :produto", Compra.class)
                 .setParameter("produto", produto)
                 .getResultList();
     }
@@ -41,8 +53,15 @@ public class CompraFacade extends AbstractFacade<Compra> {
     }
 
     public List<Compra> ultimasCompras(int quantidade) {
-        return em.createQuery("SELECT c FROM Compra c ORDER BY c.data DESC", Compra.class)
+        return em.createQuery("SELECT c FROM Compra c ORDER BY c.dataCompra DESC", Compra.class)
                 .setMaxResults(quantidade)
+                .getResultList();
+    }
+    //metodo que eu achei pra resolver o erro de salvar uma venda com mais de 1 item venda ficar aparecendo
+    //varias vezes na tabela
+
+    public List<Compra> listarComprasComItens() {
+        return em.createQuery("SELECT DISTINCT c FROM Compra c LEFT JOIN FETCH c.itemCompras", Compra.class)
                 .getResultList();
     }
 }

@@ -22,6 +22,12 @@ public class VendaFacade extends AbstractFacade<Venda> {
     public VendaFacade() {
         super(Venda.class);
     }
+    
+    public List<Venda> findAll() {
+        return em.createQuery(
+                "SELECT DISTINCT v FROM Venda v LEFT JOIN FETCH v.itensVendas i LEFT JOIN FETCH i.produto", Venda.class)
+                .getResultList();
+    }
 
     public void removerPorProduto(Produto produto) {
         em.createQuery("DELETE FROM Venda ci WHERE ci.produto = :produto")
@@ -30,7 +36,10 @@ public class VendaFacade extends AbstractFacade<Venda> {
     }
 
     public List<Venda> itensPorProduto(Produto produto) {
-        return em.createQuery("SELECT c FROM Venda c WHERE c.produto = :produto", Venda.class)
+        return em.createQuery(
+                "SELECT DISTINCT v FROM Venda v "
+                + "JOIN v.itensVendas i "
+                + "WHERE i.produto = :produto", Venda.class)
                 .setParameter("produto", produto)
                 .getResultList();
     }
@@ -41,10 +50,13 @@ public class VendaFacade extends AbstractFacade<Venda> {
     }
 
     public List<Venda> ultimasVendas(int quantidade) {
-        // exemplo
-        return em.createQuery("SELECT v FROM Venda v ORDER BY v.data DESC", Venda.class)
+        return em.createQuery("SELECT v FROM Venda v ORDER BY v.dataVenda DESC", Venda.class)
                 .setMaxResults(quantidade)
                 .getResultList();
     }
 
+    public List<Venda> listarVendasComItens() {
+        return em.createQuery("SELECT DISTINCT v FROM Venda v LEFT JOIN FETCH v.itensVendas", Venda.class)
+                .getResultList();
+    }
 }

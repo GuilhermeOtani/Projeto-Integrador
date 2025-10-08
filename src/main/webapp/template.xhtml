@@ -447,6 +447,201 @@
                 }
             }
 
+            /* ---------- DASHBOARD ---------- */
+
+            /* Container principal do dashboard */
+            .dashboard-container {
+                flex: 1;
+                padding: 20px;
+                background: #f8f9fa;
+                font-family: 'Segoe UI', sans-serif;
+                width: 100%;
+                box-sizing: border-box;
+
+                overflow-y: auto;
+                max-height: calc(100vh - 50px); /* 60px = altura do footer */
+            }
+
+            /* Garante que o conteúdo do dashboard não fique colado no footer */
+            .dashboard-content {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* Painéis superiores (cards de resumo) */
+            .dashboard-cards {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 20px;
+                margin-bottom: 30px;
+            }
+
+            .dashboard-card {
+                background: #ffffff;
+                border-radius: 12px;
+                padding: 25px;
+                text-align: center;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            .dashboard-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            }
+
+            .dashboard-card h3 {
+                font-size: 18px;
+                font-weight: 600;
+                color: #34495e;
+                margin-bottom: 10px;
+            }
+
+            .dashboard-card span {
+                font-size: 22px;
+                font-weight: 700;
+                color: #1abc9c;
+            }
+
+            /* Painéis grandes (gráficos, tabelas) */
+            .dashboard-panel {
+                background: #ffffff;
+                border-radius: 12px;
+                padding: 20px;
+                margin-bottom: 25px;
+                box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            }
+
+            .dashboard-panel h2 {
+                font-size: 20px;
+                font-weight: 600;
+                color: #2c3e50;
+                margin-bottom: 20px;
+                border-left: 4px solid #1abc9c;
+                padding-left: 10px;
+            }
+
+            /* Gráfico */
+            #barChart {
+                width: 100% !important;
+                height: 350px !important;
+            }
+
+            /* Tabelas */
+            .dashboard-table .ui-datatable {
+                width: 100%;
+                border-radius: 8px;
+                overflow: hidden;
+                border: 1px solid #e0e0e0;
+            }
+
+            .dashboard-table .ui-datatable th {
+                background: #2c3e50;
+                color: #ffffff;
+                padding: 12px;
+                font-weight: 600;
+                text-align: left;
+            }
+
+            .dashboard-table .ui-datatable td {
+                padding: 12px;
+                font-size: 15px;
+                color: #333333;
+                border-bottom: 1px solid #eaeaea;
+            }
+
+            .dashboard-table .ui-datatable tr:hover td {
+                background: #f9f9f9;
+            }
+
+            /* Responsividade */
+            @media (max-width: 768px) {
+                .dashboard-container {
+                    padding: 15px;
+                    min-height: calc(100vh - 80px); /* footer maior em telas pequenas */
+                }
+
+                .dashboard-cards {
+                    grid-template-columns: 1fr;
+                }
+            }
+            /* --- DIALOGS GERAIS (p:dialog) --- */
+            .ui-dialog {
+                border-radius: 8px !important;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25) !important;
+                border: none !important;
+            }
+
+            /* Header do Dialog */
+            .ui-dialog .ui-dialog-titlebar {
+                background: linear-gradient(135deg, #2c3e50, #34495e) !important;
+                color: #ffffff !important;
+                border: none !important;
+                padding: 15px 20px !important;
+                border-top-left-radius: 8px !important;
+                border-top-right-radius: 8px !important;
+                font-size: 1.2rem !important;
+                font-weight: 600 !important;
+            }
+
+            /* Botão de Fechar */
+            .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
+                color: #ffffff !important;
+                transition: color 0.2s;
+            }
+
+            .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close:hover {
+                color: #f1c40f !important;
+            }
+
+            /* Conteúdo do Dialog */
+            .ui-dialog .ui-dialog-content {
+                padding: 20px !important;
+                background-color: #fcfcfc !important;
+                color: #333 !important;
+            }
+
+            /* --- DETALHES DA VENDA DIALOG (detalhesForm) --- */
+
+            /* Estilo para a grade de detalhes (h:panelGrid) */
+            .detail-grid-label {
+                font-weight: 600 !important;
+                color: #34495e !important;
+                padding-right: 15px !important;
+                white-space: nowrap; /* Evita quebra de linha no rótulo */
+            }
+
+            .detail-grid-value {
+                color: #555555 !important;
+            }
+
+            /* Título da seção de Itens da Venda */
+            .detail-header {
+                font-size: 1.15rem !important;
+                font-weight: 700 !important;
+                color: #1abc9c !important;
+                margin: 20px 0 10px 0 !important;
+                padding-bottom: 5px;
+                border-bottom: 2px solid #e0e0e0;
+            }
+
+            /* --- CONFIRMAÇÃO DIALOG (confirmacaoForm) --- */
+
+            /* Centraliza o texto no diálogo de confirmação */
+            #confirmacaoForm .ui-dialog-content > .ui-outputpanel {
+                text-align: center;
+            }
+
+            /* Estilo para o texto de confirmação */
+            #confirmacaoForm .ui-outputlabel {
+                font-size: 1.1rem !important;
+                color: #2c3e50 !important;
+                display: block; /* Garante que o texto ocupe toda a largura antes do <br/> */
+                margin-bottom: 5px;
+            }
+
+
 
         </style>
     </h:head>
@@ -457,7 +652,8 @@
                 <div class="sidebar-logo">
                     <i class="fas fa-feather-alt"></i> 
                     <span>Fênix AutoPeças</span>
-                </div>                <h:form>
+                </div>               
+                <h:form>
                     <h:link outcome="/index.xhtml" styleClass="submenu-link">
                         <i class="fas fa-home"></i> Início
                     </h:link>   
@@ -492,15 +688,29 @@
                     </div>
                     <div class="submenu-container">
                         <button type="button" class="submenu-toggle">
-                            <i class="fas fa-truck"></i> Movimentos
-                            <i class="fas fa-chevron-down toggle-icon"></i>                
+                            <i class="fas fa-chart-line"></i> Movimentos <i class="fas fa-chevron-down toggle-icon"></i>
                         </button>
                         <div class="submenu">
                             <h:link outcome="/Venda/venda.xhtml" styleClass="submenu-link">
                                 <i class="fas fa-dollar-sign"></i>Venda
                             </h:link>
+                            <h:link outcome="/Venda/tabelavenda.xhtml" styleClass="submenu-link">
+                                <i class="fas fa-shopping-cart"></i>Tabela Venda
+                            </h:link>
                             <h:link outcome="/Compra/compra.xhtml" styleClass="submenu-link">
-                                <i class="fas fa-dollar-sign"></i> Compra
+                                <i class="fas fa-cash-register"></i> Compra </h:link>
+                            <h:link outcome="/Compra/tabelacompra.xhtml" styleClass="submenu-link">
+                                <i class="fas fa-box-open"></i>Tabela Compra
+                            </h:link>
+                        </div>
+                    </div>
+                    <div class="submenu-container">
+                        <button type="button" class="submenu-toggle">
+                            <i class="fas fa-chart-line"></i> Financeiro <i class="fas fa-chevron-down toggle-icon"></i>
+                        </button>
+                        <div class="submenu">
+                            <h:link outcome="/ContasReceber/contasreceber.xhtml" styleClass="submenu-link">
+                                <i class="fas fa-dollar-sign"></i>Contas á Receber
                             </h:link>
                         </div>
                     </div>
@@ -525,11 +735,11 @@
             //seleciona todos os elementos HTML que possuem classe submenu-toggle
             //para cada elemento encontrado com .submenu-toggle, ele vai executar a proxima função
             document.querySelectorAll('.submenu-toggle').forEach(button => {
-                //adiciona um ouvinte de evento ao botão.
+                //adiciona um "ouvinte" de evento ao botão.
                 //quando o usuário clica nesse botão, o que está dentro da função será executado
                 button.addEventListener('click', () => {
                     //obtém o elemento pai do botão.
-                    //supõe - se que o pai contenha o submenu que será aberto / fechado.
+                    //supoe se que o pai contenha o submenu que será aberto / fechado.
                     const container = button.parentElement;
                     container.classList.toggle('active');
                     //Alterna a classe active no elemento pai, Se o pai tiver a classe active, ela é removida,

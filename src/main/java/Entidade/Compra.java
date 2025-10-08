@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 public class Compra implements Serializable {
@@ -25,13 +27,14 @@ public class Compra implements Serializable {
     private Long id;
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataCompra;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Fornecedor fornecedor;
     @Column(name = "ValorTotal")
     private BigDecimal valorTotal;
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.EAGER,
             mappedBy = "compra")
+    @Fetch(FetchMode.SUBSELECT)
     private List<ItemCompra> itemCompras;
 
     public Compra() {

@@ -5,69 +5,76 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-
     <ui:composition template="/template.xhtml">
         <ui:define name="body">
 
+            <div class="dashboard-container">
+                <h:form>
+                    <!-- Cards de Totais -->
+                    <div class="dashboard-cards">
+                        <div class="dashboard-card">
+                            <h3>Total Vendas</h3>
+                            <span>#{dashboardControle.totalVendas}</span>
+                        </div>
 
-            <h:form>
-                <p:panelGrid columns="4" styleClass="ui-fluid" columnClasses="ui-panelgrid-cell">
+                        <div class="dashboard-card">
+                            <h3>Total Compras</h3>
+                            <span>#{dashboardControle.totalCompras}</span>
+                        </div>
 
-                    <p:panel header="Total Vendas" style="text-align:center;">
-                        <h:outputText value="#{dashboardControle.totalVendas}" />
-                    </p:panel>
+                        <div class="dashboard-card">
+                            <h3>Produtos Vendidos</h3>
+                            <span>#{dashboardControle.totalProdutosVendidos}</span>
+                        </div>
 
-                    <p:panel header="Total Compras" style="text-align:center;">
-                        <h:outputText value="#{dashboardControle.totalCompras}" />
-                    </p:panel>
+                        <div class="dashboard-card">
+                            <h3>Produtos Comprados</h3>
+                            <span>#{dashboardControle.totalProdutosComprados}</span>
+                        </div>
+                    </div>
 
-                    <p:panel header="Produtos Vendidos" style="text-align:center;">
-                        <h:outputText value="#{dashboardControle.totalProdutosVendidos}" />
-                    </p:panel>
+                    <!-- Gráfico -->
+                    <div class="dashboard-panel chart-panel">
+                        <h2>Gráfico de Vendas x Compras</h2>
+                        <p:barChart id="barChart" model="#{dashboardControle.barChartModel}" 
+                                    style="height:350px;" />
+                    </div>
 
-                    <p:panel header="Produtos Comprados" style="text-align:center;">
-                        <h:outputText value="#{dashboardControle.totalProdutosComprados}" />
-                    </p:panel>
+                    <!-- Tabelas -->
+                    <div class="dashboard-panel dashboard-table">
+                        <h2>Resumo de Vendas</h2>
+                        <p:dataTable value="#{dashboardControle.itensVendas}" var="iv" style="margin-bottom: 15px"
+                                     rendered="#{not empty dashboardControle.itensVendas}">
+                            <p:column headerText="Produto">
+                                <h:outputText value="#{iv.produto.nome}" />
+                            </p:column>
+                            <p:column headerText="Quantidade">
+                                <h:outputText value="#{iv.quantidade}" />
+                            </p:column>
+                            <p:column headerText="Subtotal">
+                                <h:outputText value="#{iv.subTotal}" />
+                            </p:column>
+                        </p:dataTable>
+                        
+                        <h2>Resumo de Compras</h2>
+                        <p:dataTable value="#{dashboardControle.itensCompras}" var="ic" 
+                                     rendered="#{not empty dashboardControle.itensCompras}">
+                            <p:column headerText="Produto">
+                                <h:outputText value="#{ic.produto.nome}" />
+                            </p:column>
+                            <p:column headerText="Quantidade">
+                                <h:outputText value="#{ic.quantidade}" />
+                            </p:column>
+                            
+                            <p:column headerText="Subtotal">
+                                <h:outputText value="#{ic.subTotal}" />
+                            </p:column>
+                        </p:dataTable>
 
-                </p:panelGrid>
+                    </div>
+                </h:form>
+            </div>
 
-                <!-- Gráfico de barras -->
-                <p:panel header="Gráfico de Vendas x Compras" style="margin-top:20px;">
-                    <p:barChart id="barChart" model="#{dashboardControle.barChartModel}" 
-                                style="height:300px;" />
-
-                </p:panel>
-
-                <!-- Tabela com detalhes (opcional) -->
-                <p:panel header="Resumo de Vendas e Compras" style="margin-top:20px;">
-                    <p:dataTable value="#{vendaControle.venda.itensVendas}" var="iv" 
-                                 rendered="#{not empty vendaControle.venda.itensVendas}">
-                        <p:column headerText="Produto">
-                            <h:outputText value="#{iv.produto.nome}" />
-                        </p:column>
-                        <p:column headerText="Quantidade">
-                            <h:outputText value="#{iv.quantidade}" />
-                        </p:column>
-                        <p:column headerText="Subtotal">
-                            <h:outputText value="#{iv.subTotal}" />
-                        </p:column>
-                    </p:dataTable>
-
-                    <p:dataTable value="#{compraControle.compra.itemCompras}" var="ic" 
-                                 rendered="#{not empty compraControle.compra.itemCompras}">
-                        <p:column headerText="Produto">
-                            <h:outputText value="#{ic.produto.nome}" />
-                        </p:column>
-                        <p:column headerText="Quantidade">
-                            <h:outputText value="#{ic.quantidade}" />
-                        </p:column>
-                        <p:column headerText="Subtotal">
-                            <h:outputText value="#{ic.subTotal}" />
-                        </p:column>
-                    </p:dataTable>
-                </p:panel>
-
-            </h:form>
         </ui:define>
     </ui:composition>
 </html>

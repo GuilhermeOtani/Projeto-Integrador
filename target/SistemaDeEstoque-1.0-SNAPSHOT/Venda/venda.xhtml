@@ -10,13 +10,24 @@
 
     <ui:define name="body">
 
-        <h:head>
+        <h:head>    
             <style>
+                html, body {
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                }
+                .scroll-container {
+                    height: 94vh;       /* ocupa toda a altura da tela */
+                    overflow-y: auto;    /* ativa o scroll vertical */
+                    padding: 1rem;
+                    box-sizing: border-box;
+                }
                 .field {
                     margin-bottom: 1.2rem;
                 }
                 .salvar-button {
-                    margin-top: 1rem;
+                    margin-top: 2rem;
                     background-color: #2196F3;
                     border: none;
                     color: white;
@@ -29,100 +40,98 @@
 
         <h:form id="formVenda">
 
-            <p:growl id="msgs" showDetail="true" sticky="false" life="5000" globalOnly="true" />
+            <div class="scroll-container">
 
-            <!-- VENDA -->
-            <p:panel header="Venda de Produtos" styleClass="p-fluid">
-                <div class="formgrid grid" style="gap: 1.5rem;">
+                <p:growl id="msgs" showDetail="true" sticky="false" life="5000" globalOnly="true" />
 
-                    <!--CLIENTE -->
-                    <div class="field col-12 md:col-6">
-                        <p:outputLabel for="cliente" value="Cliente:" />
-                        <p:selectOneMenu id="cliente" value="#{vendaControle.clienteSelecionado}" converter="#{clienteControle.clienteConverter}">
-                            <f:selectItem itemLabel="Selecione um cliente" itemValue="#{null}" noSelectionOption="true" />
-                            <f:selectItems value="#{vendaControle.listaClientes}" var="c" itemLabel="#{c.nome}" itemValue="#{c}" />
-                        </p:selectOneMenu>
+                <!-- VENDA -->
+                <p:panel header="Venda de Produtos" styleClass="p-fluid">
+                    <div class="formgrid grid" style="gap: 1.5rem;">
+
+                        <!--CLIENTE -->
+                        <div class="field col-12 md:col-6">
+                            <p:outputLabel for="cliente" value="Cliente:" />
+                            <p:selectOneMenu id="cliente" value="#{vendaControle.clienteSelecionado}" converter="#{clienteControle.clienteConverter}">
+                                <f:selectItem itemLabel="Selecione um cliente" itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItems value="#{vendaControle.listaClientes}" var="c" itemLabel="#{c.nome}" itemValue="#{c}" />
+                            </p:selectOneMenu>
+                        </div>
+
+                        <!-- PRODUTO -->
+                        <div class="field col-12 md:col-6">
+                            <p:outputLabel for="produto" value="Produto:" />
+                            <p:selectOneMenu id="produto" value="#{vendaControle.produtoSelecionado}" converter="#{produtoControle.produtoConverter}">
+                                <f:selectItem itemLabel="Selecione um produto" itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItems value="#{vendaControle.listaProdutos}" var="p" itemLabel="#{p.nome}" itemValue="#{p}" />
+                                <p:ajax event="change" listener="#{produtoControle.carregarProdutoSelecionado}" update=":formVenda:detalhesProduto" />
+                            </p:selectOneMenu>
+                        </div>
+
+                        <!-- PREÇO DO PRODUTO -->
+                        <div class="field col-12 md:col-6">
+                            <p:outputLabel value="Preço:" />
+                            <h:panelGroup id="detalhesProduto">
+                                <h:outputText value="#{vendaControle.produtoSelecionado.valor}">
+                                    <f:convertNumber type="currency" currencySymbol="R$" />
+                                </h:outputText>
+                            </h:panelGroup>
+                        </div>
+
+                        <!-- QUANTIDADE -->
+                        <div class="field col-12 md:col-6">
+                            <p:outputLabel for="quantidade" value="Quantidade:" />
+                            <p:spinner id="quantidade" value="#{vendaControle.itemVenda.quantidade}" min="1" />
+                        </div>
+
                     </div>
 
-                    <!-- PRODUTO -->
-                    <div class="field col-12 md:col-6">
-                        <p:outputLabel for="produto" value="Produto:" />
-                        <p:selectOneMenu id="produto" value="#{vendaControle.produtoSelecionado}" converter="#{produtoControle.produtoConverter}">
-                            <f:selectItem itemLabel="Selecione um produto" itemValue="#{null}" noSelectionOption="true" />
-                            <f:selectItems value="#{vendaControle.listaProdutos}" var="p" itemLabel="#{p.nome}" itemValue="#{p}" />
-                            <p:ajax event="change" listener="#{produtoControle.carregarProdutoSelecionado}" update=":formVenda:detalhesProduto" />
-                        </p:selectOneMenu>
-                    </div>
+                    <!-- ADICIONAR -->
+                    <p:commandButton value="Adicionar ao Carrinho"
+                                     actionListener="#{vendaControle.adicionarItem}"
+                                     update=":formVenda:tabelaItens :formVenda:msgs"
+                                     styleClass="salvar-button" />
+                </p:panel>
 
-                    <!-- PREÇO DO PRODUTO -->
-                    <div class="field col-12 md:col-6">
-                        <p:outputLabel value="Preço:" />
-                        <h:panelGroup id="detalhesProduto">
-                            <h:outputText value="#{vendaControle.produtoSelecionado.valor}">
+                <!-- TABELA DE ITENS -->
+                <p:panel header="Itens no Carrinho" styleClass="p-fluid" style="margin-top: 2rem;">
+                    <p:dataTable id="tabelaItens" value="#{vendaControle.venda.itensVendas}" var="item" style="width:100%">
+                        <p:column headerText="Cliente">
+                            #{vendaControle.clienteSelecionado.nome}
+                        </p:column>
+                        <p:column headerText="Produto">
+                            #{item.produto.nome}
+                        </p:column>
+                        <p:column headerText="Preço">
+                            <h:outputText value="#{item.produto.valor}">
                                 <f:convertNumber type="currency" currencySymbol="R$" />
                             </h:outputText>
-                        </h:panelGroup>
-                    </div>
-                    
-                    <!-- comment -->
-                    
+                        </p:column>
+                        <p:column headerText="Quantidade">
+                            #{item.quantidade}
+                        </p:column>
+                        <p:column headerText="Subtotal">
+                            <h:outputText value="#{item.subTotal}">
+                                <f:convertNumber type="currency" currencySymbol="R$" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Ações">
+                            <p:commandButton icon="pi pi-trash"
+                                             update=":formVenda:tabelaItens :formVenda:msgs"
+                                             actionListener="#{vendaControle.removerItem(item)}"
+                                             styleClass="p-button-danger p-button-text" />                    
+                        </p:column>
+                    </p:dataTable>
 
-                    <!-- QUANTIDADE -->
-                    <div class="field col-12 md:col-6">
-                        <p:outputLabel for="quantidade" value="Quantidade:" />
-                        <p:spinner id="quantidade" value="#{vendaControle.itemVenda.quantidade}" min="1" />
-                    </div>
+                    <!-- FINALIZAR -->
+                    <p:commandButton value="Finalizar Compra"
+                                     actionListener="#{vendaControle.finalizarVenda}"
+                                     update=":formVenda:tabelaItens :formVenda:msgs"
+                                     process="@form"
+                                     styleClass="salvar-button" />
 
-                </div>
+                </p:panel>
 
-                <!-- ADICIONAR -->
-                <p:commandButton value="Adicionar ao Carrinho"
-                                 actionListener="#{vendaControle.adicionarItem}"
-                                 update=":formVenda:tabelaItens :formVenda:msgs"
-                                 styleClass="salvar-button" />
-            </p:panel>
-
-            <!-- TABELA DE ITENS -->
-            <p:panel header="Itens no Carrinho" styleClass="p-fluid" style="margin-top: 2rem;">
-                <p:dataTable id="tabelaItens" value="#{vendaControle.venda.itensVendas}" var="item" style="width:100%">
-                    <p:column headerText="Cliente">
-                        #{vendaControle.clienteSelecionado.nome}
-                    </p:column>
-                    <p:column headerText="Produto">
-                        #{item.produto.nome}
-                    </p:column>
-                    <p:column headerText="Preço">
-                        <h:outputText value="#{item.produto.valor}">
-                            <f:convertNumber type="currency" currencySymbol="R$" />
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="Quantidade">
-                        #{item.quantidade}
-                    </p:column>
-                    <p:column headerText="Subtotal">
-                        <h:outputText value="#{item.subTotal}">
-                            <f:convertNumber type="currency" currencySymbol="R$" />
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="Ações">
-                        <p:commandButton icon="pi pi-trash"
-                                         update=":formVenda:tabelaItens :formVenda:msgs"
-                                         actionListener="#{vendaControle.removerItem(item)}"
-                                         styleClass="p-button-danger p-button-text" />                    
-                    </p:column>
-                </p:dataTable>
-
-                <!-- FINALIZAR -->
-                <p:commandButton value="Finalizar Compra"
-                                 actionListener="#{vendaControle.finalizarVenda}"
-                                 update=":formVenda:tabelaItens :formVenda:msgs"
-                                 process="@form"
-                                 styleClass="salvar-button" />
-
-
-            </p:panel>
-
+            </div>
         </h:form>
-
     </ui:define>
 </ui:composition>

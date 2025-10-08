@@ -96,7 +96,18 @@ public class CompraControle implements Serializable {
     }
 
     public void finalizarCompra() throws IOException {
+//METODO DE VALIDAÇÃO PARA NAO DEIXAR O USUARIO FINALIZAR A VENDA SEM SEELCIONAR UM CLIENTE E PRODUTO
+        if (compra.getFornecedor() == null) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", "Selecione um fornecedor antes de finalizar a venda"));
+            return;
+        }
 
+        if (compra.getItemCompras()== null || compra.getItemCompras().isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", "Adicione pelo menos um produto antes de finalizar a compra"));
+            return;
+        }
         compra.setValorTotal(compra.calcularValorTotal());
         compraFacade.salvar(compra);
 
@@ -114,14 +125,6 @@ public class CompraControle implements Serializable {
 
         context.getExternalContext().redirect(
                 context.getExternalContext().getRequestContextPath() + "/Compra/compra.xhtml?faces-redirect=true");
-    }
-
-    public BigDecimal getValorTotal() {
-        BigDecimal total = BigDecimal.ZERO;
-        for (ItemCompra iv : compra.getItemCompras()) {
-            total = total.add(iv.getSubTotal());
-        }
-        return total;
     }
 
     public Compra getCompra() {

@@ -1,8 +1,8 @@
 package Facade;
 
 import java.util.List;
+
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 public abstract class AbstractFacade<T> {
 
@@ -27,9 +27,10 @@ public abstract class AbstractFacade<T> {
     }
 
     public List<T> listaTodos() {
-        Query q = getEntityManager().createQuery("from "
-                + entityClass.getSimpleName() + " order by id desc");
-        return q.getResultList();
+        return getEntityManager()
+                .createQuery("SELECT t FROM "
+                        + entityClass.getSimpleName() + " t ORDER BY t.id DESC", entityClass).getResultList();
+
     }
 
     public void create(T entity) {

@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="body">
+            <f:view locale="pt_BR" />
+            <h:head>
+                <style>
+                    /* --- NOVOS ESTILOS PARA O CONTEÚDO DAS CÉLULAS --- */
+
+                    /* Wrapper para alinhar ícone e texto */
+                    .cell-content-wrapper {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px; /* Espaço entre o ícone e o texto */
+                    }
+
+                    /* Centraliza o conteúdo do wrapper (usado na data, por exemplo) */
+                    .cell-content-wrapper.justify-center {
+                        justify-content: center;
+                    }
+
+                    /* Estilo padrão para os ícones nas células */
+                    .cell-icon {
+                        color: #888;
+                        font-size: 1.1em;
+                    }
+
+                    /* Estilo base para os "Badges" ou "Selos" */
+                    .data-badge {
+                        display: inline-block;
+                        padding: 0.3em 0.8em;
+                        font-size: 0.85em;
+                        font-weight: 600;
+                        line-height: 1;
+                        text-align: center;
+                        white-space: nowrap;
+                        vertical-align: baseline;
+                        border-radius: 12px; /* Deixa o badge arredondado */
+                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                    }
+
+                    /* Cor do badge para o ID */
+                    .badge-id {
+                        color: #555;
+                        background-color: #e9ecef;
+                    }
+
+                    /* Cor do badge para a Quantidade de Itens */
+                    .badge-items {
+                        color: #004085;
+                        background-color: #cce5ff;
+                    }
+
+                    /* Cor do badge para o Valor Total */
+                    .badge-total {
+                        color: #155724;
+                        background-color: #d4edda;
+                    }
+
+                    /* Classe para o nome do cliente, se quiser dar mais destaque */
+                    .client-name {
+                        font-weight: 500;
+                        color: #333;
+                    }
+                    /* --- DIALOGS GERAIS (p:dialog) --- */
+.ui-dialog {
+    border-radius: 8px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25) !important;
+    border: none !important;
+}
+
+/* Header do Dialog */
+.ui-dialog .ui-dialog-titlebar {
+    background: linear-gradient(135deg, #2c3e50, #34495e) !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 15px 20px !important;
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+    font-size: 1.2rem !important;
+    font-weight: 600 !important;
+}
+
+/* Botão de Fechar */
+.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
+    color: #ffffff !important;
+    transition: color 0.2s;
+}
+
+.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close:hover {
+    color: #f1c40f !important;
+}
+
+/* Conteúdo do Dialog */
+.ui-dialog .ui-dialog-content {
+    padding: 20px !important;
+    background-color: #fcfcfc !important;
+    color: #333 !important;
+}
+
+/* --- DETALHES DA VENDA DIALOG (detalhesForm) --- */
+
+/* Estilo para a grade de detalhes (h:panelGrid) */
+.detail-grid-label {
+    font-weight: 600 !important;
+    color: #34495e !important;
+    padding-right: 15px !important;
+    white-space: nowrap; /* Evita quebra de linha no rótulo */
+}
+
+.detail-grid-value {
+    color: #555555 !important;
+}
+
+/* Título da seção de Itens da Venda */
+.detail-header {
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    color: #1abc9c !important;
+    margin: 20px 0 10px 0 !important;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+/* --- CONFIRMAÇÃO DIALOG (confirmacaoForm) --- */
+
+/* Centraliza o texto no diálogo de confirmação */
+#confirmacaoForm .ui-dialog-content > .ui-outputpanel {
+    text-align: center;
+}
+
+/* Estilo para o texto de confirmação */
+#confirmacaoForm .ui-outputlabel {
+    font-size: 1.1rem !important;
+    color: #2c3e50 !important;
+    display: block; /* Garante que o texto ocupe toda a largura antes do <br/> */
+    margin-bottom: 5px;
+}
+                </style>
+            </h:head>
+
+
+            <h:form id="formVendas">
+                <p:growl id="messages" showDetail="true" />
+
+                <div class="content">
+                    <div class="container-fluid">
+
+                        <!-- Tabela de Vendas com Row Expansion -->
+                        <p:dataTable id="tabelaVendas"
+                                     value="#{vendaListaControle.listaVendas}"
+                                     var="venda"
+                                     rowKey="#{venda.id}"
+                                     scrollable="true"
+                                     scrollHeight="550"
+                                     styleClass="custom-table ui-datatable-striped"
+                                     emptyMessage="Nenhuma venda encontrada.">
+
+                            <p:column styleClass="col-center" style="width:3em;">
+                                <p:rowToggler/>
+                            </p:column>
+
+                            <p:column headerText="ID" sortBy="#{venda.id}" styleClass="col-center col-id">
+                                <span class="data-badge badge-id">#{venda.id}</span>
+                            </p:column>
+
+                            <p:column headerText="Cliente" sortBy="#{venda.cliente.nome}" styleClass="col-text">
+                                <div class="cell-content-wrapper">
+                                    <i class="pi pi-user cell-icon"></i>
+                                    <h:outputText styleClass="client-name" value="#{venda.cliente.nome}" />
+                                </div>
+                            </p:column>
+
+                            <p:column headerText="Data Venda" style="text-align: center" sortBy="#{venda.dataVenda}" styleClass="col-center col-date">
+                                <div class="cell-content-wrapper justify-center">
+                                    <i class="pi pi-calendar cell-icon"></i>
+                                    <h:outputText value="#{venda.dataVenda}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
+                                    </h:outputText>
+                                </div>
+                            </p:column>
+
+                            <p:column headerText="Qtd. Itens" style="text-align: center" styleClass="col-center col-quantity">
+                                <span class="data-badge badge-items">
+                                    #{venda.itensVendas != null ? venda.itensVendas.size() : 0}
+                                </span>
+                            </p:column>
+
+                            <p:column headerText="Valor Total" sortBy="#{venda.valorTotal}" styleClass="col-numeric col-total">
+                                <span class="data-badge badge-total">
+                                    <h:outputText value="#{venda.valorTotal}">
+                                        <f:convertNumber type="currency" currencySymbol="R$ "/>
+                                    </h:outputText>
+                                </span>
+                            </p:column>
+
+                            <p:column headerText="Operações" style="text-align:center;">
+                                <p:commandButton icon="pi pi-trash" title="Excluir"
+                                                 styleClass="ui-button-danger"
+                                                 oncomplete="PF('confirmDialog').show();">
+                                    <f:setPropertyActionListener target="#{vendaListaControle.vendaSelecionada}" value="#{venda}" />
+                                </p:commandButton>
+                            </p:column>
+
+                            <!-- Linha expansível para detalhes -->
+                            <p:rowExpansion>
+                                <!-- Detalhes da venda -->
+                                <h:panelGrid columns="2" cellpadding="12" styleClass="venda-card">
+
+                                    <h:outputText value="ID da Venda:" />
+                                    <h:outputText value="#{venda.id}" />
+
+                                    <h:outputText value="Cliente:"/>
+                                    <h:outputText value="#{venda.cliente.nome}"/>
+
+                                    <h:outputText value="Valor Total:" />
+                                    <h:outputText value="#{venda.valorTotal}" >
+                                        <f:convertNumber type="currency" currencySymbol="R$"/>
+                                    </h:outputText>
+
+                                </h:panelGrid>
+
+                                <!-- Tabela de itens da venda -->
+                                <p:dataTable value="#{venda.itensVendas}" var="item" style="margin-top:5px;">
+                                    <p:column headerText="Produto">#{item.produto.nome}</p:column>
+                                    <p:column headerText="Quantidade">#{item.quantidade}</p:column>
+                                    <p:column headerText="Preço Unitário">
+                                        <h:outputText value="#{item.preco}">
+                                            <f:convertNumber type="currency" currencySymbol="R$"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Subtotal">
+                                        <h:outputText value="#{item.subTotal}">
+                                            <f:convertNumber type="currency" currencySymbol="R$"/>
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:rowExpansion>
+                        </p:dataTable>
+
+                    </div>
+                </div>
+
+                <!-- Dialog Confirmar Exclusão -->
+                <p:dialog id="confirmDialog" widgetVar="confirmDialog" header="Confirmar Exclusão"
+                          modal="true" resizable="false" appendTo="@(body)">
+                    <p:outputPanel style="text-align:center;">
+                        <h:outputText value="Tem certeza que deseja excluir esta venda?" style="display:block;" />
+
+                        <p:commandButton value="Sim" icon="pi pi-check" styleClass="ui-button-danger"
+                                         action="#{vendaListaControle.excluirVenda(vendaListaControle.vendaSelecionada)}"
+                                         process="@this"
+                                         update=":formVendas:tabelaVendas :formVendas:messages"
+                                         oncomplete="PF('confirmDialog').hide();" />
+
+                        <p:commandButton value="Não" icon="pi pi-times" type="button"
+                                         styleClass="ui-button-secondary"
+                                         onclick="PF('confirmDialog').hide();" />
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</html>
