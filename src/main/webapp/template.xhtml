@@ -641,6 +641,78 @@
                 margin-bottom: 5px;
             }
 
+.data-badge {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: white;
+    text-transform: uppercase;
+}
+.badge-danger {
+    background-color: #dc3545; /* Vermelho para "Aberta" */
+}
+.badge-success {
+    background-color: #28a745; /* Verde para "Recebida" */
+}
+
+/* Cards de Totalizadores */
+#formContasReceber .card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-left: 5px solid; /* Borda colorida à esquerda */
+}
+
+#formContasReceber .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* Cores específicas para as bordas dos cards */
+#formContasReceber .total-aberto-card { border-color: #dc3545; }
+#formContasReceber .total-recebido-card { border-color: #28a745; }
+#formContasReceber .total-geral-card { border-color: #007bff; }
+
+
+/* --- AJUSTES GERAIS NOS COMPONENTES PRIMEFACES --- */
+
+/* Estilo do Header dos Painéis */
+.ui-panel .ui-panel-titlebar {
+    background: #ffffff !important;
+    border: none !important;
+    border-bottom: 1px solid #dee2e6 !important;
+    font-size: 1.2rem !important;
+    font-weight: 600;
+    color: #343a40;
+}
+
+/* Estilo do Header da DataTable */
+.ui-datatable .ui-datatable-thead th {
+    background: #34495e !important; /* Cor escura do seu menu */
+    color: #ffffff !important;
+    border: none !important;
+}
+
+/* Remove a borda dos painéis para um look mais limpo */
+.ui-panel {
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-radius: 8px;
+}
+
+/* Garante que o conteúdo dentro dos painéis tenha espaçamento */
+.ui-panel .ui-panel-content {
+    padding: 1.5rem !important;
+}
+
+/* Alinhamento dos botões de paginação da DataTable */
+.ui-paginator-bottom {
+    text-align: center !important;
+    padding: 1rem 0 !important;
+}
 
 
         </style>

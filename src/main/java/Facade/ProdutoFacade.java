@@ -20,13 +20,9 @@ public class ProdutoFacade extends AbstractFacade<Produto> {
         super(Produto.class);
     }
 
-    public void salvar(Produto produto) {
-        if (produto.getId() == null) {
-            create(produto); // método herdado do AbstractFacade
-        } else {
-            edit(produto); // método herdado, faz mersge no banco
-        }
-    }
+    // O método "salvar(Produto produto)" foi REMOVIDO daqui.
+    // A classe agora vai usar o método "salvar" que ela herda do AbstractFacade,
+    // que já faz o que é preciso (cria ou edita).
 
     public Produto buscarPorId(Long id) {
         return em.find(Produto.class, id);

@@ -1,15 +1,10 @@
 package Facade;
 
 import Entidade.Cliente;
-import Entidade.Produto;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-/**
- *
- * @author jaimedias
- */
 @Stateless
 public class ClienteFacade extends AbstractFacade<Cliente> {
 
@@ -25,13 +20,9 @@ public class ClienteFacade extends AbstractFacade<Cliente> {
         super(Cliente.class);
     }
 
-    public void salvar(Cliente cliente) {
-        if (cliente.getId() == null) {
-            create(cliente); // método herdado do AbstractFacade
-        } else {
-            edit(cliente); // método herdado, faz mersge no banco
-        }
-    }
+    // O método "salvar(Cliente cliente)" foi REMOVIDO daqui.
+    // A classe agora vai usar o método "salvar" que ela herda do AbstractFacade,
+    // que já faz o que é preciso (cria ou edita).
 
     public Cliente buscarPorId(Long id) {
         return em.find(Cliente.class, id);

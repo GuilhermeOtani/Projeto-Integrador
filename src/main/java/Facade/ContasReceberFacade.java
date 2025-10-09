@@ -1,9 +1,12 @@
 package Facade;
 
 import Entidade.ContasReceber;
+import java.util.Date;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 @Stateless
 public class ContasReceberFacade extends AbstractFacade<ContasReceber> {
@@ -20,4 +23,40 @@ public class ContasReceberFacade extends AbstractFacade<ContasReceber> {
         super(ContasReceber.class);
     }
 
+    // MÉTODO DE BUSCA ATUALIZADO
+    public List<ContasReceber> buscar(Boolean somenteEmAberto, Date dataVencimentoMaxima, String nomeCliente) {
+        // A base da query agora usa LEFT JOIN FETCH para otimizar a busca do cliente
+        StringBuilder jpql = new StringBuilder("SELECT c FROM ContasReceber c LEFT JOIN FETCH c.cliente WHERE 1=1");
+
+        // Adiciona a condição de status (Em Aberto) se o filtro for ativado
+        if (Boolean.TRUE.equals(somenteEmAberto)) {
+            jpql.append(" AND c.dataRecebimento IS NULL");
+        }
+
+        // Adiciona a condição de data de vencimento se uma data for fornecida
+        if (dataVencimentoMaxima != null) {
+            jpql.append(" AND c.dataVencimento <= :dataVencimento");
+        }
+        
+        // NOVO: Adiciona a condição de nome do cliente se o filtro for preenchido
+        if (nomeCliente != null && !nomeCliente.trim().isEmpty()) {
+            jpql.append(" AND c.cliente.nome LIKE :nomeCliente");
+        }
+
+        jpql.append(" ORDER BY c.dataVencimento ASC");
+
+        TypedQuery<ContasReceber> query = em.createQuery(jpql.toString(), ContasReceber.class);
+
+        // Define os parâmetros na query, caso eles existam
+        if (dataVencimentoMaxima != null) {
+            query.setParameter("dataVencimento", dataVencimentoMaxima);
+        }
+        
+        // NOVO: Define o parâmetro para o nome do cliente
+        if (nomeCliente != null && !nomeCliente.trim().isEmpty()) {
+            query.setParameter("nomeCliente", "%" + nomeCliente + "%");
+        }
+
+        return query.getResultList();
+    }
 }
