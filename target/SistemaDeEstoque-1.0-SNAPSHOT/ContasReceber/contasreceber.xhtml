@@ -16,7 +16,7 @@
                     <div class="content">
                         <div class="container-fluid">
 
-                            <p:panel header="Filtros e Ações" style="margin-bottom: 20px;">
+                            <p:panel header="Filtros e Ações" style="margin-bottom: 20px;" styleClass="filter-panel-modern">
                                 <div class="ui-fluid formgrid grid">
 
                                     <div class="field col-12 md:col-3">
@@ -42,7 +42,7 @@
                                         </p:inputText>
                                     </div>
 
-                                    <div class="field col-12 md:col-3" style="align-self: end;">
+                                    <div class="field col-12 md:col-3">
                                         <p:commandButton value="Limpar Filtros" icon="pi pi-refresh"
                                                          actionListener="#{contasReceberControle.limparFiltros}"
                                                          update="tabelaContas panelTotalizador @form"

@@ -38,7 +38,6 @@
                 left: 0;
                 display: flex;
                 flex-direction: column;
-                padding-top: 35px;
                 box-shadow: 2px 0 15px rgba(0, 0, 0, 0.25);
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 transition: all 0.3s ease;
@@ -641,78 +640,218 @@
                 margin-bottom: 5px;
             }
 
-.data-badge {
-    padding: 5px 10px;
-    border-radius: 12px;
-    font-weight: bold;
-    font-size: 0.8rem;
-    color: white;
-    text-transform: uppercase;
-}
-.badge-danger {
-    background-color: #dc3545; /* Vermelho para "Aberta" */
-}
-.badge-success {
-    background-color: #28a745; /* Verde para "Recebida" */
-}
+            .data-badge {
+                padding: 5px 10px;
+                border-radius: 12px;
+                font-weight: bold;
+                font-size: 0.8rem;
+                color: white;
+                text-transform: uppercase;
+            }
+            .badge-danger {
+                background-color: #dc3545; /* Vermelho para "Aberta" */
+            }
+            .badge-success {
+                background-color: #28a745; /* Verde para "Recebida" */
+            }
 
-/* Cards de Totalizadores */
-#formContasReceber .card {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border-left: 5px solid; /* Borda colorida à esquerda */
-}
+            /* Cards de Totalizadores */
+            #formContasReceber .card {
+                background-color: #ffffff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+                border-left: 5px solid; /* Borda colorida à esquerda */
+            }
 
-#formContasReceber .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-}
+            #formContasReceber .card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            }
 
-/* Cores específicas para as bordas dos cards */
-#formContasReceber .total-aberto-card { border-color: #dc3545; }
-#formContasReceber .total-recebido-card { border-color: #28a745; }
-#formContasReceber .total-geral-card { border-color: #007bff; }
+            /* Cores específicas para as bordas dos cards */
+            #formContasReceber .total-aberto-card {
+                border-color: #dc3545;
+            }
+            #formContasReceber .total-recebido-card {
+                border-color: #28a745;
+            }
+            #formContasReceber .total-geral-card {
+                border-color: #007bff;
+            }
 
 
-/* --- AJUSTES GERAIS NOS COMPONENTES PRIMEFACES --- */
+            /* --- AJUSTES GERAIS NOS COMPONENTES PRIMEFACES --- */
 
-/* Estilo do Header dos Painéis */
-.ui-panel .ui-panel-titlebar {
-    background: #ffffff !important;
-    border: none !important;
-    border-bottom: 1px solid #dee2e6 !important;
-    font-size: 1.2rem !important;
-    font-weight: 600;
-    color: #343a40;
-}
+            /* Estilo do Header dos Painéis */
+            .ui-panel .ui-panel-titlebar {
+                background: #ffffff !important;
+                border: none !important;
+                border-bottom: 1px solid #dee2e6 !important;
+                font-size: 1.2rem !important;
+                font-weight: 600;
+                color: #343a40;
+            }
 
-/* Estilo do Header da DataTable */
-.ui-datatable .ui-datatable-thead th {
-    background: #34495e !important; /* Cor escura do seu menu */
-    color: #ffffff !important;
-    border: none !important;
-}
+            /* Estilo do Header da DataTable */
+            .ui-datatable .ui-datatable-thead th {
+                background: #34495e !important; /* Cor escura do seu menu */
+                color: #ffffff !important;
+                border: none !important;
+            }
 
-/* Remove a borda dos painéis para um look mais limpo */
-.ui-panel {
-    border: none !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    border-radius: 8px;
-}
+            /* Remove a borda dos painéis para um look mais limpo */
+            .ui-panel {
+                border: none !important;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                border-radius: 8px;
+            }
 
-/* Garante que o conteúdo dentro dos painéis tenha espaçamento */
-.ui-panel .ui-panel-content {
-    padding: 1.5rem !important;
-}
+            /* Garante que o conteúdo dentro dos painéis tenha espaçamento */
+            .ui-panel .ui-panel-content {
+                padding: 1.5rem !important;
+            }
 
-/* Alinhamento dos botões de paginação da DataTable */
-.ui-paginator-bottom {
-    text-align: center !important;
-    padding: 1rem 0 !important;
-}
+            /* Alinhamento dos botões de paginação da DataTable */
+            .ui-paginator-bottom {
+                text-align: center !important;
+                padding: 1rem 0 !important;
+            }
+
+            #formContasReceber .filter-panel-modern {
+                --c-brand: #4338ca; /* Anil um pouco mais escuro e sóbrio */
+                --c-brand-light: rgba(67, 56, 202, 0.15);
+                --c-danger: #e11d48; /* Tom de rosa/vermelho moderno para o botão */
+                --c-danger-hover: #be123c;
+                --c-text-title: #1e293b;
+                --c-text-body: #334155;
+                --c-text-label: #475569;
+                --c-border: #e2e8f0;
+                --c-border-focus: var(--c-brand);
+                --c-bg-panel: #ffffff;
+                --c-bg-content: #fdfdff; /* Fundo do conteúdo quase branco */
+                --c-bg-input: #ffffff;
+            }
+
+            /* --- Container Principal do Painel --- */
+            #formContasReceber .filter-panel-modern.ui-panel {
+                border: 1px solid var(--c-border) !important;
+                border-radius: 16px !important;
+                background-color: var(--c-bg-panel) !important;
+                box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.05) !important;
+            }
+
+            /* --- Cabeçalho do Painel --- */
+            #formContasReceber .filter-panel-modern .ui-panel-titlebar {
+                background: var(--c-bg-panel) !important;
+                color: var(--c-text-title) !important;
+                font-weight: 600 !important;
+                font-size: 1.1rem !important;
+                padding: 1rem 1.75rem !important;
+                border-bottom: 1px solid var(--c-border) !important;
+                border-radius: 16px 16px 0 0 !important;
+            }
+
+            /* --- Conteúdo do Painel --- */
+            #formContasReceber .filter-panel-modern .ui-panel-content {
+                padding: 1.75rem !important;
+                background-color: var(--c-bg-content) !important;
+                border-radius: 0 0 16px 16px !important;
+            }
+
+            /* --- Rótulos (Labels) --- */
+            #formContasReceber .filter-panel-modern .ui-outputlabel {
+                font-weight: 500 !important;
+                color: var(--c-text-label) !important;
+                margin-bottom: 0.5rem !important;
+                font-size: 0.875rem !important;
+            }
+
+            /* --- Campos de Texto e Calendário --- */
+            #formContasReceber .filter-panel-modern .ui-inputfield {
+                border-radius: 8px !important;
+                border: 1px solid var(--c-border) !important;
+                background-color: var(--c-bg-input) !important;
+                padding: 0.75rem 1rem !important;
+                font-size: 1rem !important;
+                color: var(--c-text-body) !important;
+                box-shadow: none !important;
+                transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+            }
+
+            #formContasReceber .filter-panel-modern .ui-inputfield:focus {
+                border-color: var(--c-border-focus) !important;
+                box-shadow: 0 0 0 3px var(--c-brand-light) !important;
+            }
+
+            /* --- Botões de Rádio (Status) --- */
+            #formContasReceber .filter-panel-modern .ui-selectoneradio .ui-radiobutton-box {
+                border-radius: 50% !important;
+                width: 20px !important;
+                height: 20px !important;
+                border: 2px solid var(--c-border) !important;
+                background: var(--c-bg-input) !important;
+                transition: all 0.2s ease !important;
+            }
+
+            #formContasReceber .filter-panel-modern .ui-selectoneradio .ui-radiobutton-box:hover {
+                border-color: var(--c-brand) !important;
+            }
+
+            #formContasReceber .filter-panel-modern .ui-selectoneradio .ui-radiobutton-box.ui-state-active {
+                border-color: var(--c-brand) !important;
+                background-color: var(--c-brand) !important;
+            }
+
+            #formContasReceber .filter-panel-modern .ui-selectoneradio .ui-radiobutton-icon {
+                display: none !important;
+            }
+
+            #formContasReceber .filter-panel-modern .ui-selectoneradio .ui-radiobutton-box.ui-state-active::before {
+                content: '' !important;
+                display: block !important;
+                width: 8px !important;
+                height: 8px !important;
+                border-radius: 50% !important;
+                background: #ffffff !important;
+                position: relative !important;
+                top: 4px !important;
+                left: 4px !important;
+            }
+
+            #formContasReceber .filter-panel-modern .ui-selectoneradio label {
+                color: var(--c-text-body) !important;
+                margin-left: 0.75rem !important;
+                font-weight: 500 !important;
+            }
+
+            /* --- Botão "Limpar Filtros" (AJUSTADO PARA SER ESTICADO) --- */
+            #formContasReceber .filter-panel-modern .ui-button.ui-button-secondary {
+                /* Cor e fundo */
+                background: var(--c-danger) !important;
+                color: #ffffff !important;
+                border: none !important;
+
+                /* Tamanho e espaçamento */
+                /* As 2 linhas abaixo foram removidas para o botão voltar a ter 100% de largura */
+                /* width: auto !important; */
+                /* display: inline-block !important; */
+                padding: 0.6rem 1.5rem !important;
+                margin-top: 1.75rem !important;
+
+                /* Estilo e interatividade */
+                border-radius: 8px !important;
+                font-weight: 600 !important;
+                transition: all 0.2s ease !important;
+                box-shadow: 0 4px 15px -4px var(--c-danger) !important;
+            }
+
+            #formContasReceber .filter-panel-modern .ui-button.ui-button-secondary:hover {
+                background: var(--c-danger-hover) !important;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px -4px var(--c-danger) !important;
+            }
 
 
         </style>

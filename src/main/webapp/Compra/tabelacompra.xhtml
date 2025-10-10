@@ -43,13 +43,13 @@
                             </p:column>
 
                             <p:column headerText="Qtd. Itens" style="text-align: center">
-                                <span class="data-badge badge-items">
+                                <span>
                                     #{compra.itemCompras != null ? compra.itemCompras.size() : 0}
                                 </span>
                             </p:column>
 
                             <p:column headerText="Valor Total" sortBy="#{compra.valorTotal}" style="text-align: center">
-                                <span class="data-badge badge-total">
+                                <span>
                                     <h:outputText value="#{compra.valorTotal}">
                                         <f:convertNumber type="currency" currencySymbol="R$ "/>
                                     </h:outputText>
