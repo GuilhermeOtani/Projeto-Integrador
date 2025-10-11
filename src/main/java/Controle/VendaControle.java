@@ -206,7 +206,6 @@ public class VendaControle implements Serializable {
         }
     }
 
-    // --- Getters e Setters (não precisam de alteração) ---
     public Venda getVenda() {
         return venda;
     }

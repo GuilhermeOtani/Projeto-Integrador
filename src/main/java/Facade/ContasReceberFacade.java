@@ -22,6 +22,29 @@ public class ContasReceberFacade extends AbstractFacade<ContasReceber> {
     public ContasReceberFacade() {
         super(ContasReceber.class);
     }
+// Dentro da classe ContasReceberFacade.java
+
+    public boolean existeParcelaAnteriorEmAberto(ContasReceber conta) {
+        // Esta implementação pode variar dependendo se você usa JPA, Criteria API, etc.
+        // O objetivo é criar uma consulta que procure por contas da mesma venda,
+        // com um número de parcela menor e que ainda não tenham data de recebimento.
+        try {
+            Long count = getEntityManager().createQuery(
+                    "SELECT COUNT(c) FROM ContasReceber c "
+                    + "WHERE c.venda = :venda "
+                    + "AND c.parcela < :parcelaAtual "
+                    + "AND c.dataRecebimento IS NULL", Long.class)
+                    .setParameter("venda", conta.getVenda())
+                    .setParameter("parcelaAtual", conta.getParcela())
+                    .getSingleResult();
+
+            return count > 0;
+        } catch (Exception e) {
+            // Tratar exceção, talvez logar o erro
+            // Retornar 'true' por precaução pode evitar um pagamento indevido em caso de erro.
+            return true;
+        }
+    }
 
     // MÉTODO DE BUSCA ATUALIZADO
     public List<ContasReceber> buscar(Boolean somenteEmAberto, Date dataVencimentoMaxima, String nomeCliente) {
@@ -37,7 +60,7 @@ public class ContasReceberFacade extends AbstractFacade<ContasReceber> {
         if (dataVencimentoMaxima != null) {
             jpql.append(" AND c.dataVencimento <= :dataVencimento");
         }
-        
+
         // NOVO: Adiciona a condição de nome do cliente se o filtro for preenchido
         if (nomeCliente != null && !nomeCliente.trim().isEmpty()) {
             jpql.append(" AND c.cliente.nome LIKE :nomeCliente");
@@ -51,7 +74,7 @@ public class ContasReceberFacade extends AbstractFacade<ContasReceber> {
         if (dataVencimentoMaxima != null) {
             query.setParameter("dataVencimento", dataVencimentoMaxima);
         }
-        
+
         // NOVO: Define o parâmetro para o nome do cliente
         if (nomeCliente != null && !nomeCliente.trim().isEmpty()) {
             query.setParameter("nomeCliente", "%" + nomeCliente + "%");

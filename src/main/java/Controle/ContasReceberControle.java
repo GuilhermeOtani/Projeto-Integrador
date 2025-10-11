@@ -3,7 +3,7 @@ package Controle;
 import Entidade.ContasReceber;
 import Facade.ContasReceberFacade;
 import java.io.Serializable;
-import java.math.BigDecimal; // IMPORTADO
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -23,13 +23,12 @@ public class ContasReceberControle implements Serializable {
     private boolean mostraTodasContas = false;
     private String nomeClienteFiltro;
 
-    // NOVOS: Atributos para os totais
     private BigDecimal totalEmAberto;
     private BigDecimal totalRecebido;
     private BigDecimal totalGeral;
 
     @EJB
-    private transient ContasReceberFacade contasReceberFacade; // Adicionado 'transient' como boa prática
+    private transient ContasReceberFacade contasReceberFacade;
 
     @PostConstruct
     public void init() {
@@ -38,21 +37,17 @@ public class ContasReceberControle implements Serializable {
 
     public void buscarContas() {
         boolean somenteEmAberto = !mostraTodasContas;
-        // ALTERADO: A chamada agora passa o novo filtro de nome
         listaContas = contasReceberFacade.buscar(somenteEmAberto, dataFiltroVencimento, nomeClienteFiltro);
-
-        // NOVO: Após cada busca, calcula os totais
         calcularTotais();
     }
 
     public void limparFiltros() {
         dataFiltroVencimento = null;
         mostraTodasContas = false;
-        nomeClienteFiltro = null; // Limpa o novo filtro também
+        nomeClienteFiltro = null;
         buscarContas();
     }
 
-    // NOVO: Método para calcular os totais da lista filtrada
     private void calcularTotais() {
         totalEmAberto = BigDecimal.ZERO;
         totalRecebido = BigDecimal.ZERO;
@@ -69,6 +64,7 @@ public class ContasReceberControle implements Serializable {
         totalGeral = totalEmAberto.add(totalRecebido);
     }
 
+    // ALTERADO: Método com a nova verificação
     public void registrarRecebimento() {
         if (contaSelecionada == null || contaSelecionada.getId() == null) {
             FacesContext.getCurrentInstance().addMessage(null,
@@ -82,6 +78,21 @@ public class ContasReceberControle implements Serializable {
             return;
         }
 
+        // =====================================================================
+        // NOVO: Verificação de parcelas anteriores em aberto
+        // =====================================================================
+        // Só executa a verificação se a conta for proveniente de uma venda parcelada
+        if (contaSelecionada.getVenda() != null && contaSelecionada.getParcela() > 1) {
+            boolean existeAnterior = contasReceberFacade.existeParcelaAnteriorEmAberto(contaSelecionada);
+            if (existeAnterior) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", 
+                        "Não é possível quitar esta parcela, pois existem parcelas anteriores em aberto para a mesma venda."));
+                return;
+            }
+        }
+        // =====================================================================
+
         contaSelecionada.setDataRecebimento(new Date());
 
         try {
@@ -89,17 +100,16 @@ public class ContasReceberControle implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Conta Nº " + contaSelecionada.getId() + " recebida com sucesso!"));
 
-            buscarContas();
+            // Atualiza a lista e os totais
+            buscarContas(); 
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Erro ao registrar recebimento: " + e.getMessage()));
         }
     }
 
-    // --- Getters e Setters ---
-    // (Getters e Setters existentes para contaSelecionada, listaContas, etc.)
-    // ...
-    // NOVOS Getters e Setters para os filtros e totais
+    // Getters e Setters (sem alterações)
+
     public String getNomeClienteFiltro() {
         return nomeClienteFiltro;
     }
@@ -120,7 +130,6 @@ public class ContasReceberControle implements Serializable {
         return totalGeral;
     }
 
-    // (manter os outros getters e setters)
     public ContasReceber getContaSelecionada() {
         return contaSelecionada;
     }
