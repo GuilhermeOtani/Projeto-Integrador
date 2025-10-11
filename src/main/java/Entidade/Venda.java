@@ -25,27 +25,35 @@ public class Venda implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataVenda;
-    
+
     @ManyToOne(fetch = FetchType.EAGER)
     private Cliente cliente;
-    
+
     @Column(name = "ValorTotal")
     private BigDecimal valorTotal;
-    
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "venda", fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     private List<ItemVenda> itensVendas;
 
-    // NOVOS CAMPOS ADICIONADOS
     @Column(length = 50)
     private String formaPagamento;
-    
+
     private Integer numeroParcelas;
-    
-    // --- FIM DOS NOVOS CAMPOS ---
+
+    @OneToMany(mappedBy = "venda", fetch = FetchType.LAZY)
+    private List<ContasReceber> parcelas;
+
+    public List<ContasReceber> getParcelas() {
+        return parcelas;
+    }
+
+    public void setParcelas(List<ContasReceber> parcelas) {
+        this.parcelas = parcelas;
+    }
 
     public Venda() {
         itensVendas = new ArrayList<>();
@@ -53,7 +61,7 @@ public class Venda implements Serializable {
         valorTotal = BigDecimal.ZERO; // Boa prática inicializar
         numeroParcelas = 1; // Padrão
     }
-    
+
     public BigDecimal calcularValorTotal() {
         BigDecimal total = BigDecimal.ZERO;
         for (ItemVenda it : itensVendas) {
@@ -63,7 +71,6 @@ public class Venda implements Serializable {
     }
 
     // --- Getters e Setters ---
-    
     public Long getId() {
         return id;
     }
@@ -103,7 +110,7 @@ public class Venda implements Serializable {
     public void setItemVendas(List<ItemVenda> itemVendas) {
         this.itensVendas = itemVendas;
     }
-    
+
     // NOVOS GETTERS E SETTERS
     public String getFormaPagamento() {
         return formaPagamento;

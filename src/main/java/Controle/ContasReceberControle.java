@@ -1,11 +1,15 @@
 package Controle;
 
 import Entidade.ContasReceber;
+import Entidade.Venda;
 import Facade.ContasReceberFacade;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -17,12 +21,15 @@ import javax.inject.Named;
 @ViewScoped
 public class ContasReceberControle implements Serializable {
 
+    
+    
     private ContasReceber contaSelecionada;
     private List<ContasReceber> listaContas;
+    private List<Venda> listaVendasAgrupadas; 
+   
     private Date dataFiltroVencimento;
     private boolean mostraTodasContas = false;
     private String nomeClienteFiltro;
-
     private BigDecimal totalEmAberto;
     private BigDecimal totalRecebido;
     private BigDecimal totalGeral;
@@ -39,6 +46,46 @@ public class ContasReceberControle implements Serializable {
         boolean somenteEmAberto = !mostraTodasContas;
         listaContas = contasReceberFacade.buscar(somenteEmAberto, dataFiltroVencimento, nomeClienteFiltro);
         calcularTotais();
+        agruparContasPorVenda(); // A chamada permanece aqui
+    }
+
+    // ======================================================================================
+    // MÉTODO CORRIGIDO PARA SER COMPATÍVEL COM VERSÕES ANTIGAS DO JAVA
+    // ======================================================================================
+    private void agruparContasPorVenda() {
+        if (listaContas == null || listaContas.isEmpty()) {
+            listaVendasAgrupadas = new ArrayList<>();
+            return;
+        }
+
+        Map<Long, Venda> vendasMap = new LinkedHashMap<>();
+        
+        for (ContasReceber conta : listaContas) {
+            if (conta.getVenda() == null) {
+                continue; // Pula contas que por algum motivo não têm venda
+            }
+
+            Long vendaId = conta.getVenda().getId();
+            Venda vendaAgrupada;
+
+            // 1. Verifica se já adicionamos esta Venda ao nosso mapa
+            if (vendasMap.containsKey(vendaId)) {
+                // Se sim, apenas a pegamos do mapa
+                vendaAgrupada = vendasMap.get(vendaId);
+            } else {
+                // Se não, é a primeira parcela que vemos desta venda
+                vendaAgrupada = conta.getVenda();
+                // Preparamos a lista de parcelas para receber apenas as do filtro
+                vendaAgrupada.setParcelas(new ArrayList<ContasReceber>()); // Use o seu método set, ex: setItensVendas
+                // E adicionamos a nova Venda ao mapa
+                vendasMap.put(vendaId, vendaAgrupada);
+            }
+
+            // 2. Adiciona a parcela atual à lista de parcelas da Venda correta
+            vendaAgrupada.getParcelas().add(conta); // Use o seu método get, ex: getItensVendas
+        }
+        
+        this.listaVendasAgrupadas = new ArrayList<>(vendasMap.values());
     }
 
     public void limparFiltros() {
@@ -64,7 +111,6 @@ public class ContasReceberControle implements Serializable {
         totalGeral = totalEmAberto.add(totalRecebido);
     }
 
-    // ALTERADO: Método com a nova verificação
     public void registrarRecebimento() {
         if (contaSelecionada == null || contaSelecionada.getId() == null) {
             FacesContext.getCurrentInstance().addMessage(null,
@@ -78,10 +124,6 @@ public class ContasReceberControle implements Serializable {
             return;
         }
 
-        // =====================================================================
-        // NOVO: Verificação de parcelas anteriores em aberto
-        // =====================================================================
-        // Só executa a verificação se a conta for proveniente de uma venda parcelada
         if (contaSelecionada.getVenda() != null && contaSelecionada.getParcela() > 1) {
             boolean existeAnterior = contasReceberFacade.existeParcelaAnteriorEmAberto(contaSelecionada);
             if (existeAnterior) {
@@ -91,7 +133,6 @@ public class ContasReceberControle implements Serializable {
                 return;
             }
         }
-        // =====================================================================
 
         contaSelecionada.setDataRecebimento(new Date());
 
@@ -100,7 +141,6 @@ public class ContasReceberControle implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Conta Nº " + contaSelecionada.getId() + " recebida com sucesso!"));
 
-            // Atualiza a lista e os totais
             buscarContas(); 
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
@@ -108,8 +148,12 @@ public class ContasReceberControle implements Serializable {
         }
     }
 
-    // Getters e Setters (sem alterações)
+    // ================== GETTERS E SETTERS ==================
 
+    public List<Venda> getListaVendasAgrupadas() {
+        return listaVendasAgrupadas;
+    }
+    
     public String getNomeClienteFiltro() {
         return nomeClienteFiltro;
     }

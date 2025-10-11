@@ -36,6 +36,7 @@ Controle\CompraListaControle.class
 Facade\ContasReceberFacade.class
 Facade\EstadoFacade.class
 Converter\UsuarioConverter.class
+DTO\ContasReceberDTO.class
 Controle\ClienteControle.class
 Entidade\ItemCompra.class
 Facade\UsuarioFacade.class

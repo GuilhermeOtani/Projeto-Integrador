@@ -6,151 +6,156 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:composition template="/template.xhtml">
-      <ui:define name="body">
-    <f:view locale="pt_BR" />
-    <h:form id="formVendas">
-        <p:growl id="messages" showDetail="true" />
+        <ui:define name="body">
+            <f:view locale="pt_BR" />
+            <h:form id="formVendas">
+                <p:growl id="messages" showDetail="true" />
 
-        <div class="content">
-            <div class="container-fluid">
+                <div class="content">
+                    <div class="container-fluid">
 
 
-                <p:dataTable id="tabelaVendas"
-                             value="#{vendaListaControle.listaVendas}"
-                             var="venda"
-                             rowKey="#{venda.id}"
-                             scrollable="true"
-                             scrollHeight="550"
-                             styleClass="ui-datatable-striped"
-                             emptyMessage="Nenhuma venda encontrada."
-                             style="table-layout: fixed;">
+                        <p:dataTable id="tabelaVendas"
+                                     value="#{vendaListaControle.listaVendas}"
+                                     var="venda"
+                                     rowKey="#{venda.id}"
+                                     scrollable="true"
+                                     scrollHeight="550"
+                                     styleClass="ui-datatable-striped"
+                                     emptyMessage="Nenhuma venda encontrada."
+                                     style="table-layout: fixed;">
 
-                    <p:column headerText="ID" sortBy="#{venda.id}" style="text-align: center">
-                        <h:outputText value="#{venda.id}" />
-                    </p:column>
+                            <p:column headerText="ID" sortBy="#{venda.id}" style="text-align: center">
+                                <h:outputText value="#{venda.id}" />
+                            </p:column>
 
-                    <p:column headerText="Cliente" sortBy="#{venda.cliente.nome}" style="text-align: center">
-                        <h:outputText value="#{venda.cliente.nome}" />
-                    </p:column>
+                            <p:column headerText="Cliente" sortBy="#{venda.cliente.nome}" style="text-align: center" 
+                                      filterBy="#{venda.cliente.nome}" sortable="true" filterMatchMode="contains">
+                                <h:outputText value="#{venda.cliente.nome}" />
+                            </p:column>
 
-                    <p:column headerText="Data Venda" sortBy="#{venda.dataVenda}" style="text-align: center">
-                        <div class="cell-content-wrapper">
-                            <i class="pi pi-calendar cell-icon"></i>
-                            <h:outputText value="#{venda.dataVenda}">
-                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
-                            </h:outputText>
-                        </div>
-                    </p:column>
+                            <p:column headerText="Data Venda" sortBy="#{venda.dataVenda}" style="text-align: center">
+                                <div class="cell-content-wrapper">
+                                    <i class="pi pi-calendar cell-icon"></i>
+                                    <h:outputText value="#{venda.dataVenda}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
+                                    </h:outputText>
+                                </div>
+                            </p:column>
 
-                    <p:column headerText="Qtd. Itens" style="text-align: center">
-                        <span>
-                            #{venda.itensVendas != null ? venda.itensVendas.size() : 0}
-                        </span>
-                    </p:column>
+                            <p:column headerText="Qtd. Itens" style="text-align: center">
+                                <span>
+                                    #{venda.itensVendas != null ? venda.itensVendas.size() : 0}
+                                </span>
+                            </p:column>
 
-                    <p:column headerText="Valor Total" sortBy="#{venda.valorTotal}" style="text-align: center">
-                        <span>
-                            <h:outputText value="#{venda.valorTotal}">
-                                <f:convertNumber type="currency" currencySymbol="R$ "/>
-                            </h:outputText>
-                        </span>
-                    </p:column>
+                            <p:column headerText="Valor Total" sortBy="#{venda.valorTotal}" style="text-align: center">
+                                <span>
+                                    <h:outputText value="#{venda.valorTotal}">
+                                        <f:convertNumber type="currency" currencySymbol="R$ "/>
+                                    </h:outputText>
+                                </span>
+                            </p:column>
 
-                    <p:column headerText="Operações" style="text-align: center">
-                        <p:commandButton icon="pi pi-info-circle" title="Detalhes da Venda"
-                                         styleClass="ui-button-info ui-button-flat"
-                                         oncomplete="PF('detalhesDialog').show();"
-                                         update=":detalhesForm:detalhesVendaPanel">
-                            <f:setPropertyActionListener target="#{vendaListaControle.vendaSelecionada}" value="#{venda}" />
-                        </p:commandButton>
-                        
-                        <p:commandButton icon="pi pi-trash" title="Excluir"
-                                         styleClass="ui-button-danger"
-                                         oncomplete="PF('confirmDialog').show();"
-                                         update=":confirmacaoForm:confirmacaoPanel">
-                            <f:setPropertyActionListener target="#{vendaListaControle.vendaSelecionada}" value="#{venda}" />
-                        </p:commandButton>
-                    </p:column>
+                            <p:column headerText="Operações" style="text-align: center">
+                                <p:commandButton icon="pi pi-info-circle" title="Detalhes da Venda"
+                                                 styleClass="ui-button-info ui-button-flat"
+                                                 oncomplete="PF('detalhesDialog').show();"
+                                                 update=":detalhesForm:detalhesVendaPanel">
+                                    <f:setPropertyActionListener target="#{vendaListaControle.vendaSelecionada}" value="#{venda}" />
+                                </p:commandButton>
 
-                </p:dataTable>
+                                <p:commandButton icon="pi pi-trash" title="Excluir"
+                                                 styleClass="ui-button-danger"
+                                                 oncomplete="PF('confirmDialog').show();"
+                                                 update=":confirmacaoForm:confirmacaoPanel">
+                                    <f:setPropertyActionListener target="#{vendaListaControle.vendaSelecionada}" value="#{venda}" />
+                                </p:commandButton>
+                            </p:column>
 
-            </div>
-        </div>
-    </h:form>
+                        </p:dataTable>
 
-    <h:form id="detalhesForm">
-        <p:dialog id="detalhesVendaDialog" widgetVar="detalhesDialog"
-                  header="Detalhes da Venda - ID #{vendaListaControle.vendaSelecionada.id}"
-                  modal="true" resizable="false" width="650" appendTo="@(body)">
-
-            <p:outputPanel id="detalhesVendaPanel">
-
-                <h:panelGrid columns="2"  columnClasses="detail-grid-label, detail-grid-value">
-                    <h:outputText value="ID da Venda:" />
-                    <h:outputText value="#{vendaListaControle.vendaSelecionada.id}"/>
-                    <h:outputText value="Cliente:" />
-                    <h:outputText value="#{vendaListaControle.vendaSelecionada.cliente.nome}" />
-                    <h:outputText value="Data da Venda:" />
-                    <h:outputText value="#{vendaListaControle.vendaSelecionada.dataVenda}">
-                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo"/>
-                    </h:outputText>
-                    <h:outputText value="Valor Total:"/>
-                    <h:outputText value="#{vendaListaControle.vendaSelecionada.valorTotal}">
-                        <f:convertNumber type="currency" currencySymbol="R$ "/>
-                    </h:outputText>
-                </h:panelGrid>
-
-                <p:outputPanel rendered="#{vendaListaControle.vendaSelecionada.itensVendas.size() > 0}">
-                    <p class="detail-header">Itens da Venda</p>
-
-                    <p:dataTable value="#{vendaListaControle.vendaSelecionada.itensVendas}" var="item"
-                                 emptyMessage="Nenhum item encontrado.">
-
-                        <p:column headerText="Produto" style="text-align: center">#{item.produto.nome}</p:column>
-                        <p:column headerText="Qtd" style="width: 70px; text-align: center">#{item.quantidade}</p:column>
-                        <p:column headerText="Preço Unitário" style="width: 120px; text-align: center">
-                            <h:outputText value="#{item.preco}" style="text-align: center">
-                                <f:convertNumber type="currency" currencySymbol="R$ "/>
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="Subtotal" style="width: 120px; text-align: center">
-                            <h:outputText value="#{item.subTotal}">
-                                <f:convertNumber type="currency" currencySymbol="R$ "/>
-                            </h:outputText>
-                        </p:column>
-                    </p:dataTable>
-                </p:outputPanel>
-
-            </p:outputPanel>
-        </p:dialog>
-    </h:form>
-
-    <h:form id="confirmacaoForm">
-        <p:outputPanel id="confirmacaoPanel">
-            <p:dialog id="confirmDialog" widgetVar="confirmDialog" header="Confirmar Exclusão"
-                      modal="true" resizable="false" appendTo="@(body)" width="350">
-                <p:outputPanel>
-                    <h:outputText value="Tem certeza que deseja excluir esta venda?" />
-                    
-                    <br/>
-                    <br/> 
-                    
-                    <div style="text-align: center">
-                        <p:commandButton value="Sim" icon="pi pi-check"
-                                         styleClass="ui-button-danger"
-                                         action="#{vendaListaControle.excluirVenda(vendaListaControle.vendaSelecionada)}"
-                                         process="@this"
-                                         update=":formVendas:tabelaVendas :formVendas:messages"
-                                         oncomplete="PF('confirmDialog').hide();" 
-                                         style="margin-right: 10px"/>
-
-                        <p:commandButton value="Não" icon="pi pi-times" type="button"
-                                         styleClass="ui-button-secondary"
-                                         onclick="PF('confirmDialog').hide();" />
                     </div>
+                </div>
+            </h:form>
+
+            <h:form id="detalhesForm">
+                <p:dialog id="detalhesVendaDialog" widgetVar="detalhesDialog"
+                          header="Detalhes da Venda - ID #{vendaListaControle.vendaSelecionada.id}"
+                          modal="true" resizable="false" width="650" appendTo="@(body)">
+
+                    <p:outputPanel id="detalhesVendaPanel">
+
+                        <h:panelGrid columns="2"  columnClasses="detail-grid-label, detail-grid-value">
+                            <h:outputText value="ID da Venda:" />
+                            <h:outputText value="#{vendaListaControle.vendaSelecionada.id}"/>
+                            <h:outputText value="Cliente:" />
+                            <h:outputText value="#{vendaListaControle.vendaSelecionada.cliente.nome}" />
+                            <h:outputText value="Telefone:" />
+                            <h:outputText value="#{vendaListaControle.vendaSelecionada.cliente.telefone}"/>
+                            <h:outputText value="Data da Venda:" />
+                            <h:outputText value="#{vendaListaControle.vendaSelecionada.dataVenda}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Sao_Paulo"/>
+                            </h:outputText>
+
+
+                            <h:outputText value="Valor Total:"/>
+                            <h:outputText value="#{vendaListaControle.vendaSelecionada.valorTotal}">
+                                <f:convertNumber type="currency" currencySymbol="R$ "/>
+                            </h:outputText>
+                        </h:panelGrid>
+
+                        <p:outputPanel rendered="#{vendaListaControle.vendaSelecionada.itensVendas.size() > 0}">
+                            <p class="detail-header">Itens da Venda</p>
+
+                            <p:dataTable value="#{vendaListaControle.vendaSelecionada.itensVendas}" var="item"
+                                         emptyMessage="Nenhum item encontrado.">
+
+                                <p:column headerText="Produto" style="text-align: center">#{item.produto.nome}</p:column>
+                                <p:column headerText="Qtd" style="width: 70px; text-align: center">#{item.quantidade}</p:column>
+                                <p:column headerText="Preço Unitário" style="width: 120px; text-align: center">
+                                    <h:outputText value="#{item.preco}" style="text-align: center">
+                                        <f:convertNumber type="currency" currencySymbol="R$ "/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Subtotal" style="width: 120px; text-align: center">
+                                    <h:outputText value="#{item.subTotal}">
+                                        <f:convertNumber type="currency" currencySymbol="R$ "/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+
+            <h:form id="confirmacaoForm">
+                <p:outputPanel id="confirmacaoPanel">
+                    <p:dialog id="confirmDialog" widgetVar="confirmDialog" header="Confirmar Exclusão"
+                              modal="true" resizable="false" appendTo="@(body)" width="350">
+                        <p:outputPanel>
+                            <h:outputText value="Tem certeza que deseja excluir esta venda?" />
+
+                            <br/>
+                            <br/> 
+
+                            <div style="text-align: center">
+                                <p:commandButton value="Sim" icon="pi pi-check"
+                                                 styleClass="ui-button-danger"
+                                                 action="#{vendaListaControle.excluirVenda(vendaListaControle.vendaSelecionada)}"
+                                                 process="@this"
+                                                 update=":formVendas:tabelaVendas :formVendas:messages"
+                                                 oncomplete="PF('confirmDialog').hide();" 
+                                                 style="margin-right: 10px"/>
+
+                                <p:commandButton value="Não" icon="pi pi-times" type="button"
+                                                 styleClass="ui-button-secondary"
+                                                 onclick="PF('confirmDialog').hide();" />
+                            </div>
+                        </p:outputPanel>
+                    </p:dialog>
                 </p:outputPanel>
-            </p:dialog>
-        </p:outputPanel>
-    </h:form>
-</ui:define>    </ui:composition>
+            </h:form>
+        </ui:define>    </ui:composition>
 </html>

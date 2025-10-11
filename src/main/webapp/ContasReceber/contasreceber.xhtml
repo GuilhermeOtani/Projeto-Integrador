@@ -7,6 +7,166 @@
 
     <ui:composition template="/template.xhtml">
         <ui:define name="body">
+            <style >
+                .modern-table.ui-datatable {
+                    border: none;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                    margin-top: 25px;
+                }
+
+                /* Cabeçalho da Tabela Principal */
+                .modern-table .ui-datatable-thead > tr > th {
+                    background: #f8f9fa;
+                    color: #34495e;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    padding: 16px 12px !important; /* !important para garantir a sobreposição */
+                    border: none;
+                    border-bottom: 2px solid #e9ecef;
+                    text-align: center;
+                }
+
+                /* Células da Tabela Principal */
+                .modern-table .ui-datatable-tbody > tr > td {
+                    padding: 14px 12px;
+                    border-color: #e9ecef !important;
+                    vertical-align: middle;
+                    border-bottom-width: 1px; /* Linhas mais sutis */
+                    border-top-width: 0;
+                    border-left-width: 0;
+                    border-right-width: 0;
+                }
+
+                /* Estilo para linhas zebradas (striped) */
+                .modern-table.ui-datatable-striped .ui-datatable-tbody > tr.ui-row-odd {
+                    background-color: #fdfdfd;
+                }
+                .modern-table.ui-datatable-striped .ui-datatable-tbody > tr.ui-row-even {
+                    background-color: #f8f9fa;
+                }
+
+                /* Efeito de hover nas linhas */
+                .modern-table .ui-datatable-tbody > tr:not(.ui-datatable-empty-message):hover {
+                    background-color: #e6f7ff !important;
+                    cursor: pointer;
+                }
+
+                /* Ícone para expandir a linha (Row Toggler) */
+                .modern-table .ui-row-toggler {
+                    color: #007bff;
+                    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+                }
+                .modern-table .ui-datatable-tbody tr:hover .ui-row-toggler {
+                    color: #0056b3;
+                    transform: scale(1.1);
+                }
+
+
+                /* ---- Estilo da Linha Expandida (Row Expansion) ---- */
+                .modern-table .ui-expanded-row-content {
+                    background-color: #f8f9fa;
+                    border: 0 !important;
+                    padding: 0 !important;
+                }
+
+                /* Tabela Aninhada */
+                .modern-table .ui-datatable-nested {
+                    border: none !important;
+                    width: 100%;
+                }
+
+                /* Cabeçalho da Tabela Aninhada */
+                .modern-table .ui-datatable-nested .ui-datatable-thead > tr > th {
+                    background-color: #e9ecef;
+                    color: #495057;
+                    padding: 12px !important;
+                    font-weight: 500;
+                    border: none;
+                    text-align: center;
+                }
+
+                /* Células da Tabela Aninhada */
+                .modern-table .ui-datatable-nested .ui-datatable-tbody > tr > td {
+                    padding: 12px;
+                    border: none;
+                    border-bottom: 1px solid #dee2e6;
+                    vertical-align: middle;
+                    background: transparent !important; /* Garante fundo limpo */
+                }
+
+                .modern-table .ui-datatable-nested .ui-datatable-tbody > tr:last-child > td {
+                    border-bottom: none;
+                }
+
+
+                /* ---- Componentes Específicos (Status e Botões) ---- */
+                .data-badge {
+                    padding: 5px 12px;
+                    border-radius: 15px;
+                    font-weight: bold;
+                    font-size: 0.8em;
+                    color: #fff;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+                .badge-danger {
+                    background-color: #dc3545;
+                    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+                }
+                .badge-success {
+                    background-color: #28a745;
+                    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+                }
+                .pi-check-circle {
+                    font-size: 1.8em !important;
+                    color: #28a745 !important;
+                    vertical-align: middle;
+                }
+
+                /* ---- Paginação ---- */
+                .modern-table .ui-paginator {
+                    background-color: #f8f9fa;
+                    border: none;
+                    padding: 15px 10px;
+                }
+                .modern-table .ui-paginator .ui-paginator-page,
+                .modern-table .ui-paginator .ui-paginator-first,
+                .modern-table .ui-paginator .ui-paginator-prev,
+                .modern-table .ui-paginator .ui-paginator-next,
+                .modern-table .ui-paginator .ui-paginator-last {
+                    color: #007bff;
+                    border-radius: 50%;
+                    height: 32px;
+                    width: 32px;
+                    margin: 0 3px;
+                    transition: background-color 0.2s, color 0.2s;
+                }
+                .modern-table .ui-paginator .ui-paginator-page:hover,
+                .modern-table .ui-paginator .ui-paginator-first:hover,
+                .modern-table .ui-paginator .ui-paginator-prev:hover,
+                .modern-table .ui-paginator .ui-paginator-next:hover,
+                .modern-table .ui-paginator .ui-paginator-last:hover {
+                    background-color: #e6f2ff;
+                    color: #0056b3;
+                }
+                .modern-table .ui-paginator .ui-state-active {
+                    background-color: #007bff;
+                    color: #ffffff;
+                    border: 1px solid #007bff;
+                }
+
+                /* Mensagem de "nenhum registro encontrado" */
+                .modern-table .ui-datatable-empty-message > td {
+                    text-align: center;
+                    padding: 40px !important;
+                    font-style: italic;
+                    color: #6c757d;
+                }
+
+            </style>
             <div class="dashboard-container">
 
                 <f:view locale="pt_BR" />
@@ -84,76 +244,88 @@
 
                                 </div>
                             </p:outputPanel>
-                            <p:dataTable id="tabelaContas" value="#{contasReceberControle.listaContas}" var="conta"
+                            <p:dataTable id="tabelaContas" 
+                                         value="#{contasReceberControle.listaVendasAgrupadas}" 
+                                         var="venda"
+                                         rowKey="#{venda.id}"
                                          paginator="true"
-                                         rows="15"
+                                         rows="10"
                                          paginatorPosition="bottom"
                                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                          currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
-                                         rowsPerPageTemplate="15,30,50"
-                                         emptyMessage="Nenhuma conta encontrada para os filtros aplicados."
-                                         styleClass="ui-datatable-striped ui-datatable-gridlines">
-
-                                <p:column headerText="Status" style="width: 100px; text-align: center;">
-                                    <span class="#{conta.dataRecebimento == null ? 'data-badge badge-danger' : 'data-badge badge-success'}">
-                                        #{conta.dataRecebimento == null ? 'ABERTA' : 'RECEBIDA'}
-                                    </span>
+                                         rowsPerPageTemplate="10,20,50"
+                                         emptyMessage="Nenhuma venda encontrada para os filtros aplicados."
+                                         styleClass="modern-table ui-datatable-striped"> 
+                                <p:column style="width:3rem; text-align: center;">
+                                    <p:rowToggler />
                                 </p:column>
 
-                                <p:column headerText="ID" sortBy="#{conta.id}" style="width: 70px; text-align: center;">
-                                    <h:outputText value="#{conta.id}" />
+                                <p:column headerText="Venda" sortBy="#{venda.id}" style="text-align: center;">
+                                    <h:outputText value="#{venda.id}" style="font-weight: bold;"/>
                                 </p:column>
 
-                                <p:column headerText="Venda" sortBy="#{conta.venda.id}" style="width: 80px; text-align: center;">
-                                    <h:outputText value="#{conta.venda.id}" />
+                                <p:column headerText="Cliente" filterBy="#{venda.cliente.nome}" filterMatchMode="contains" style="text-align: center;">
+                                    <h:outputText value="#{venda.cliente.nome}" />
                                 </p:column>
 
-                                <p:column headerText="Cliente" sortBy="#{conta.cliente.nome}" filterBy="#{conta.cliente.nome}" filterMatchMode="contains" style="text-align: center;">
-                                    <h:outputText value="#{conta.cliente.nome}" />
-                                </p:column>
-
-                                <p:column headerText="Vencimento" sortBy="#{conta.dataVencimento}" style="width: 130px; text-align: center;">
-                                    <h:outputText value="#{conta.dataVencimento}">
-                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
-                                    </h:outputText>
-                                </p:column>
-
-                                <p:column headerText="Recebimento" sortBy="#{conta.dataRecebimento}" style="width: 130px; text-align: center;">
-                                    <h:outputText value="#{conta.dataRecebimento}">
-                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
-                                    </h:outputText>
-                                </p:column>
-
-                                <p:column headerText="Valor" sortBy="#{conta.valor}" style="width: 150px; text-align: center;">
-                                    <h:outputText value="#{conta.valor}" style="font-weight: bold;">
+                                <p:column headerText="Total da Venda" style="text-align: center;">
+                                    <h:outputText value="#{venda.valorTotal}">
                                         <f:convertNumber type="currency" currencySymbol="R$ "/>
                                     </h:outputText>
                                 </p:column>
 
-                                <p:column headerText="Ação" style="width: 80px; text-align: center;">
-
-                                    <h:panelGroup rendered="#{empty conta.dataRecebimento}">
-                                        <p:commandButton
-                                            icon="pi pi-check"
-                                            title="Registrar Recebimento"
-                                            styleClass="ui-button-success"
-                                            oncomplete="PF('confirmarRecebimentoDialog').show();"
-                                            update=":confirmacaoRecebimentoForm:confirmacaoRecebimentoPanel">
-                                            <f:setPropertyActionListener target="#{contasReceberControle.contaSelecionada}" value="#{conta}" />
-                                        </p:commandButton>
-                                    </h:panelGroup>
-
-                                    <h:panelGroup rendered="#{not empty conta.dataRecebimento}">
-                                        <i class="pi pi-check-circle"
-                                           style="font-size: 1.5em; color: green;"
-                                           title="Conta já recebida"/>
-                                    </h:panelGroup>
-
+                                <p:column headerText="Parcelas" style="text-align: center;">
+                                    <h:outputText value="#{venda.parcelas.size()} de #{venda.numeroParcelas}" />
                                 </p:column>
 
+                                <p:rowExpansion>
+                                    <p:dataTable value="#{venda.parcelas}" var="conta" styleClass="ui-datatable-nested">
+                                        <p:column headerText="Status" style="text-align: center;">
+                                            <span class="#{conta.dataRecebimento == null ? 'data-badge badge-danger' : 'data-badge badge-success'}">
+                                                #{conta.dataRecebimento == null ? 'ABERTA' : 'RECEBIDA'}
+                                            </span>
+                                        </p:column>
+
+                                        <p:column headerText="Parcela" style="text-align: center;">
+                                            <h:outputText value="#{conta.parcela}" />
+                                        </p:column>
+
+                                        <p:column headerText="Vencimento" style="text-align: center;">
+                                            <h:outputText value="#{conta.dataVencimento}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
+                                            </h:outputText>
+                                        </p:column>
+
+                                        <p:column headerText="Valor Parcela" style="text-align: center;">
+                                            <h:outputText value="#{conta.valor}" style="font-weight: bold;">
+                                                <f:convertNumber type="currency" currencySymbol="R$ "/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Data Recebimento" style="text-align: center;">
+                                            <h:panelGroup rendered="#{not empty conta.dataRecebimento}">
+                                                <h:outputText value="#{conta.dataRecebimento}">
+                                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"/>
+                                                </h:outputText>
+                                            </h:panelGroup>
+                                        </p:column>
+
+                                        <p:column headerText="Ação" style="text-align: center;">
+                                            <h:panelGroup rendered="#{empty conta.dataRecebimento}">
+                                                <p:commandButton icon="pi pi-check" title="Registrar Recebimento"
+                                                                 styleClass="ui-button-success"
+                                                                 oncomplete="PF('confirmarRecebimentoDialog').show();"
+                                                                 update=":confirmacaoRecebimentoForm:confirmacaoRecebimentoPanel :formContasReceber:tabelaContas :formContasReceber:messages :formContasReceber:panelTotalizador">
+                                                    <f:setPropertyActionListener target="#{contasReceberControle.contaSelecionada}" value="#{conta}" />
+                                                </p:commandButton>
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{not empty conta.dataRecebimento}">
+                                                <i class="pi pi-check-circle" style="font-size: 1.5em; color: green;" title="Conta já recebida"/>
+                                            </h:panelGroup>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:rowExpansion>
 
                             </p:dataTable>
-
                         </div>
                     </div>
                 </h:form>
