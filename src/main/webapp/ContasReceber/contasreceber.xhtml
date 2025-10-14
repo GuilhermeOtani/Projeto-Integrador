@@ -165,6 +165,11 @@
                     font-style: italic;
                     color: #6c757d;
                 }
+                .badge-warning {
+                    background-color: #ffc107; /* Laranja/Amarelo de alerta */
+                    box-shadow: 0 2px 4px rgba(255, 193, 7, 0.4);
+                }
+
 
             </style>
             <div class="dashboard-container">
@@ -264,11 +269,11 @@
                                     <h:outputText value="#{venda.id}" style="font-weight: bold;"/>
                                 </p:column>
 
-                                <p:column headerText="Cliente" filterBy="#{venda.cliente.nome}" filterMatchMode="contains" style="text-align: center;">
+                                <p:column headerText="Cliente" style="text-align: center;">
                                     <h:outputText value="#{venda.cliente.nome}" />
                                 </p:column>
 
-                                <p:column headerText="Total da Venda" style="text-align: center;">
+                                <p:column headerText="Total da Venda" style="text-align: center;" sortBy="#{venda.valorTotal}">
                                     <h:outputText value="#{venda.valorTotal}">
                                         <f:convertNumber type="currency" currencySymbol="R$ "/>
                                     </h:outputText>
@@ -281,9 +286,13 @@
                                 <p:rowExpansion>
                                     <p:dataTable value="#{venda.parcelas}" var="conta" styleClass="ui-datatable-nested">
                                         <p:column headerText="Status" style="text-align: center;">
-                                            <span class="#{conta.dataRecebimento == null ? 'data-badge badge-danger' : 'data-badge badge-success'}">
-                                                #{conta.dataRecebimento == null ? 'ABERTA' : 'RECEBIDA'}
-                                            </span>
+                                            <p:column headerText="Status" style="text-align: center;">
+                                                <p:column headerText="Status" style="text-align: center;">
+                                                    <span class="#{contasReceberControle.getStatusClass(conta)}">
+                                                        #{contasReceberControle.getStatus(conta)}
+                                                    </span>
+                                                </p:column>
+                                            </p:column>
                                         </p:column>
 
                                         <p:column headerText="Parcela" style="text-align: center;">

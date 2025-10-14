@@ -5,6 +5,7 @@
 package Entidade;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,8 +20,8 @@ import javax.persistence.TemporalType;
  * @author melhe
  */
 @Entity
-public class ContasPagar implements Serializable{
-    
+public class ContasPagar implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -30,7 +31,7 @@ public class ContasPagar implements Serializable{
     private Date dataVencimento;
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataPagamento;
-    private Double valor;
+    private BigDecimal valor;
     @ManyToOne
     private Compra compra;
     @ManyToOne
@@ -71,11 +72,11 @@ public class ContasPagar implements Serializable{
         this.dataPagamento = dataPagamento;
     }
 
-    public Double getValor() {
+    public BigDecimal getValor() {
         return valor;
     }
 
-    public void setValor(Double valor) {
+    public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
 
@@ -118,5 +119,5 @@ public class ContasPagar implements Serializable{
     public void setObservacao(String observacao) {
         this.observacao = observacao;
     }
-    
+
 }

@@ -4,12 +4,17 @@ import Entidade.Fornecedor;
 import Entidade.ItemCompra;
 import Entidade.Produto;
 import Entidade.Compra;
+import Entidade.ContasPagar;
 import Facade.FornecedorFacade;
 import Facade.ProdutoFacade;
 import Facade.CompraFacade;
+import Facade.ContasPagarFacade;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -22,19 +27,34 @@ import javax.inject.Named;
 @ViewScoped
 public class CompraControle implements Serializable {
 
-    private Compra compra = new Compra();
-    private ItemCompra itemCompra = new ItemCompra();
+    private Compra compra;
+    private ItemCompra itemCompra;
     private Produto produtoSelecionado;
     private Fornecedor fornecedorSelecionado;
+    private Date dataPrimeiroVencimento;
 
     @EJB
-    private ProdutoFacade produtoFacade;
+    private transient ProdutoFacade produtoFacade;
 
     @EJB
-    private FornecedorFacade fornecedorFacade;
+    private transient FornecedorFacade fornecedorFacade;
 
     @EJB
-    private CompraFacade compraFacade;
+    private transient CompraFacade compraFacade;
+
+    @EJB
+    private transient ContasPagarFacade contasPagarFacade;
+
+    //maneira que achei para a tela nao travar quando der f5, mudar para viewscoped tambem ajudou
+    @PostConstruct
+    public void init() {
+        compra = new Compra();
+        itemCompra = new ItemCompra();
+        produtoSelecionado = null;
+        fornecedorSelecionado = null;
+        dataPrimeiroVencimento = new Date();
+
+    }
 
     public List<Produto> getListaProdutos() {
         return produtoFacade.listaTodos();
@@ -86,6 +106,7 @@ public class CompraControle implements Serializable {
             compra.getItemCompras().add(novoItem);
         }
 
+        compra.setValorTotal(compra.calcularValorTotal());
         // limpa seleção
         itemCompra = new ItemCompra();
         produtoSelecionado = null;
@@ -93,6 +114,8 @@ public class CompraControle implements Serializable {
 
     public void removerItem(ItemCompra iv) {
         compra.getItemCompras().remove(iv);
+        compra.setValorTotal(compra.calcularValorTotal());
+
     }
 
     public void finalizarCompra() throws IOException {
@@ -103,13 +126,20 @@ public class CompraControle implements Serializable {
             return;
         }
 
-        if (compra.getItemCompras()== null || compra.getItemCompras().isEmpty()) {
+        if (compra.getItemCompras() == null || compra.getItemCompras().isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", "Adicione pelo menos um produto antes de finalizar a compra"));
             return;
         }
+
+        if (compra.getFormaPagamento() == null || compra.getFormaPagamento().trim().isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", "Selecione uma forma de pagamento!"));
+            return;
+        }
+
         compra.setValorTotal(compra.calcularValorTotal());
-        compraFacade.salvar(compra);
+        Compra compraSalva = compraFacade.salvarERetornar(compra);
 
         // Atualizar estoque
         for (ItemCompra iv : compra.getItemCompras()) {
@@ -117,7 +147,10 @@ public class CompraControle implements Serializable {
             p.setEstoque(p.getEstoque() + iv.getQuantidade());
             produtoFacade.salvar(p);
         }
-
+        if ("A Prazo".equalsIgnoreCase(compraSalva.getFormaPagamento())) {
+            // Passamos a 'vendaSalva' (que tem ID) como parâmetro
+            gerarParcelas(compraSalva);
+        }
         FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Compra finalizada!"));
 
@@ -125,6 +158,48 @@ public class CompraControle implements Serializable {
 
         context.getExternalContext().redirect(
                 context.getExternalContext().getRequestContextPath() + "/Compra/compra.xhtml?faces-redirect=true");
+    }
+
+    private void gerarParcelas(Compra compraSalva) {
+        BigDecimal valorTotal = compraSalva.getValorTotal();
+        Integer numParcelas = compraSalva.getNumeroParcelas();
+
+        if (numParcelas == null || numParcelas <= 0) {
+            numParcelas = 1;
+        }
+
+        BigDecimal valorParcela = valorTotal.divide(new BigDecimal(numParcelas), 2, RoundingMode.HALF_UP);
+        BigDecimal somaDasParcelas = BigDecimal.ZERO;
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dataPrimeiroVencimento);
+
+        for (int i = 1; i <= numParcelas; i++) {
+            ContasPagar cp = new ContasPagar();
+
+            // Usando a 'vendaSalva', que já está sincronizada com o banco
+            cp.setCompra(compraSalva);
+            cp.setFornecedor(compraSalva.getFornecedor());
+            cp.setDataLancamento(new Date());
+            cp.setParcela(i);
+            cp.setFormaPagamento(compraSalva.getFormaPagamento());
+            cp.setObservacao("Ref. Compra Nº: " + compraSalva.getId());
+
+            if (i > 1) {
+                cal.add(Calendar.MONTH, 1);
+            }
+            cp.setDataVencimento(cal.getTime());
+
+            if (i == numParcelas) {
+                BigDecimal valorUltimaParcela = valorTotal.subtract(somaDasParcelas);
+                cp.setValor(valorUltimaParcela);
+            } else {
+                cp.setValor(valorParcela);
+                somaDasParcelas = somaDasParcelas.add(valorParcela);
+            }
+
+            contasPagarFacade.salvar(cp);
+        }
     }
 
     public Compra getCompra() {
@@ -159,13 +234,45 @@ public class CompraControle implements Serializable {
         this.fornecedorSelecionado = fornecedorSelecionado;
     }
 
-    //maneira que achei para a tela nao travar quando der f5, mudar para viewscoped tambem ajudou
-    @PostConstruct
-    public void init() {
-        compra = new Compra();
-        itemCompra = new ItemCompra();
-        produtoSelecionado = null;
-        fornecedorSelecionado = null;
+    public Date getDataPrimeiroVencimento() {
+        return dataPrimeiroVencimento;
     }
+
+    public void setDataPrimeiroVencimento(Date dataPrimeiroVencimento) {
+        this.dataPrimeiroVencimento = dataPrimeiroVencimento;
+    }
+
+    public ProdutoFacade getProdutoFacade() {
+        return produtoFacade;
+    }
+
+    public void setProdutoFacade(ProdutoFacade produtoFacade) {
+        this.produtoFacade = produtoFacade;
+    }
+
+    public FornecedorFacade getFornecedorFacade() {
+        return fornecedorFacade;
+    }
+
+    public void setFornecedorFacade(FornecedorFacade fornecedorFacade) {
+        this.fornecedorFacade = fornecedorFacade;
+    }
+
+    public CompraFacade getCompraFacade() {
+        return compraFacade;
+    }
+
+    public void setCompraFacade(CompraFacade compraFacade) {
+        this.compraFacade = compraFacade;
+    }
+
+    public ContasPagarFacade getContasPagarFacade() {
+        return contasPagarFacade;
+    }
+
+    public void setContasPagarFacade(ContasPagarFacade contasPagarFacade) {
+        this.contasPagarFacade = contasPagarFacade;
+    }
+    
 
 }

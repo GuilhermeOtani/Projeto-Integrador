@@ -21,12 +21,10 @@ import javax.inject.Named;
 @ViewScoped
 public class ContasReceberControle implements Serializable {
 
-    
-    
     private ContasReceber contaSelecionada;
     private List<ContasReceber> listaContas;
-    private List<Venda> listaVendasAgrupadas; 
-   
+    private List<Venda> listaVendasAgrupadas;
+
     private Date dataFiltroVencimento;
     private boolean mostraTodasContas = false;
     private String nomeClienteFiltro;
@@ -59,7 +57,7 @@ public class ContasReceberControle implements Serializable {
         }
 
         Map<Long, Venda> vendasMap = new LinkedHashMap<>();
-        
+
         for (ContasReceber conta : listaContas) {
             if (conta.getVenda() == null) {
                 continue; // Pula contas que por algum motivo não têm venda
@@ -84,7 +82,7 @@ public class ContasReceberControle implements Serializable {
             // 2. Adiciona a parcela atual à lista de parcelas da Venda correta
             vendaAgrupada.getParcelas().add(conta); // Use o seu método get, ex: getItensVendas
         }
-        
+
         this.listaVendasAgrupadas = new ArrayList<>(vendasMap.values());
     }
 
@@ -128,8 +126,8 @@ public class ContasReceberControle implements Serializable {
             boolean existeAnterior = contasReceberFacade.existeParcelaAnteriorEmAberto(contaSelecionada);
             if (existeAnterior) {
                 FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", 
-                        "Não é possível quitar esta parcela, pois existem parcelas anteriores em aberto para a mesma venda."));
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção",
+                                "Não é possível quitar esta parcela, pois existem parcelas anteriores em aberto para a mesma venda."));
                 return;
             }
         }
@@ -141,19 +139,55 @@ public class ContasReceberControle implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Conta Nº " + contaSelecionada.getId() + " recebida com sucesso!"));
 
-            buscarContas(); 
+            buscarContas();
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Erro ao registrar recebimento: " + e.getMessage()));
         }
     }
 
+    public String getStatus(ContasReceber conta) {
+        if (conta == null) {
+            return ""; // Retorna vazio se o objeto for nulo por algum motivo
+        }
+        if (conta.getDataRecebimento() != null) {
+            return "RECEBIDA";
+        }
+        // Verifica se a data de vencimento não é nula e se a data atual é posterior a ela
+        if (conta.getDataVencimento() != null && new Date().after(conta.getDataVencimento())) {
+            return "VENCIDA";
+        }
+        return "ABERTA";
+    }
+
+    /**
+     * Método público que retorna a classe CSS correspondente ao status da
+     * conta.
+     *
+     * @param conta A instância de ContasReceber da linha da tabela.
+     * @return A String com as classes CSS para o badge de status.
+     */
+    public String getStatusClass(ContasReceber conta) {
+        if (conta == null) {
+            return "data-badge";
+        }
+        // Reutiliza o método getStatus para não repetir a lógica
+        switch (getStatus(conta)) {
+            case "RECEBIDA":
+                return "data-badge badge-success";
+            case "VENCIDA":
+                return "data-badge badge-danger";
+            case "ABERTA":
+            default:
+                return "data-badge badge-warning"; // Usando a classe de alerta
+        }
+    }
     // ================== GETTERS E SETTERS ==================
 
     public List<Venda> getListaVendasAgrupadas() {
         return listaVendasAgrupadas;
     }
-    
+
     public String getNomeClienteFiltro() {
         return nomeClienteFiltro;
     }

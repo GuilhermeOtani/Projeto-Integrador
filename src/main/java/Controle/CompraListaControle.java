@@ -1,10 +1,10 @@
 package Controle;
 
-import Entidade.Compra;
 import Entidade.ItemCompra;
 import Entidade.Produto;
-import Facade.CompraFacade;
+import Entidade.Compra;
 import Facade.ProdutoFacade;
+import Facade.CompraFacade;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -24,8 +24,8 @@ public class CompraListaControle implements Serializable {
     @EJB
     private CompraFacade compraFacade;
     
-   @EJB
-   private ProdutoFacade produtoFacade;
+    @EJB    
+    private ProdutoFacade produtoFacade;
 
     @PostConstruct
     public void init() {
@@ -42,16 +42,16 @@ public class CompraListaControle implements Serializable {
 
     public void excluirCompra(Compra compra) {
         try {
-            //reverte estoque antes de excluir 
+            //reverte o estoque antes da exclusao
             for (ItemCompra item : compra.getItemCompras()) {
                 Produto produto = item.getProduto();
                 if (produto != null) {
-                    produto.setEstoque(produto.getEstoque()- item.getQuantidade());
+                    produto.setEstoque(produto.getEstoque()+ item.getQuantidade());
                     produtoFacade.edit(produto);
                 }
             }
 
-            //agora remove a compra
+            //agora sim remove a compra
             compraFacade.remover(compra);
 
             FacesContext.getCurrentInstance().addMessage(null,
@@ -60,7 +60,7 @@ public class CompraListaControle implements Serializable {
             carregarCompras();
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Compra foi possível excluir a venda."));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Não foi possível excluir a compra."));
             e.printStackTrace();
         }
     }

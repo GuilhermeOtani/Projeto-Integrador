@@ -29,13 +29,13 @@ public class ContasPagarControle implements Serializable {
    
     private Date dataFiltroVencimento;
     private boolean mostraTodasContas = false;
-    private String nomeClienteFiltro;
+    private String nomeFornecedorFiltro;
     private BigDecimal totalEmAberto;
-    private BigDecimal totalRecebido;
+    private BigDecimal totalPagado;
     private BigDecimal totalGeral;
 
     @EJB
-    private transient ContasPagarFacade contasReceberFacade;
+    private transient ContasPagarFacade contasPagarFacade;
 
     @PostConstruct
     public void init() {
@@ -44,7 +44,7 @@ public class ContasPagarControle implements Serializable {
 
     public void buscarContas() {
         boolean somenteEmAberto = !mostraTodasContas;
-        listaContas = contasReceberFacade.buscar(somenteEmAberto, dataFiltroVencimento, nomeClienteFiltro);
+        listaContas = contasPagarFacade.buscar(somenteEmAberto, dataFiltroVencimento, nomeFornecedorFiltro);
         calcularTotais();
         agruparContasPorCompra(); // A chamada permanece aqui
     }
@@ -58,93 +58,93 @@ public class ContasPagarControle implements Serializable {
             return;
         }
 
-        Map<Long, Compra> vendasMap = new LinkedHashMap<>();
+        Map<Long, Compra> comprasMap = new LinkedHashMap<>();
         
         for (ContasPagar conta : listaContas) {
             if (conta.getCompra() == null) {
-                continue; // Pula contas que por algum motivo não têm venda
+                continue; // Pula contas que por algum motivo não têm compra
             }
 
-            Long vendaId = conta.getCompra().getId();
-            Compra vendaAgrupada;
+            Long compraId = conta.getCompra().getId();
+            Compra compraAgrupada;
 
             // 1. Verifica se já adicionamos esta Compra ao nosso mapa
-            if (vendasMap.containsKey(vendaId)) {
+            if (comprasMap.containsKey(compraId)) {
                 // Se sim, apenas a pegamos do mapa
-                vendaAgrupada = vendasMap.get(vendaId);
+                compraAgrupada = comprasMap.get(compraId);
             } else {
-                // Se não, é a primeira parcela que vemos desta venda
-                vendaAgrupada = conta.getCompra();
-                // Preparamos a lista de parcelas para receber apenas as do filtro
-                vendaAgrupada.setParcelas(new ArrayList<ContasPagar>()); // Use o seu método set, ex: setItensCompras
+                // Se não, é a primeira parcela que vemos desta compra
+                compraAgrupada = conta.getCompra();
+                // Preparamos a lista de parcelas para pagar apenas as do filtro
+                compraAgrupada.setParcelas(new ArrayList<ContasPagar>()); // Use o seu método set, ex: setItemCompras
                 // E adicionamos a nova Compra ao mapa
-                vendasMap.put(vendaId, vendaAgrupada);
+                comprasMap.put(compraId, compraAgrupada);
             }
 
             // 2. Adiciona a parcela atual à lista de parcelas da Compra correta
-            vendaAgrupada.getParcelas().add(conta); // Use o seu método get, ex: getItensCompras
+            compraAgrupada.getParcelas().add(conta); // Use o seu método get, ex: getItemCompras
         }
         
-        this.listaComprasAgrupadas = new ArrayList<>(vendasMap.values());
+        this.listaComprasAgrupadas = new ArrayList<>(comprasMap.values());
     }
 
     public void limparFiltros() {
         dataFiltroVencimento = null;
         mostraTodasContas = false;
-        nomeClienteFiltro = null;
+        nomeFornecedorFiltro = null;
         buscarContas();
     }
 
     private void calcularTotais() {
         totalEmAberto = BigDecimal.ZERO;
-        totalRecebido = BigDecimal.ZERO;
+        totalPagado = BigDecimal.ZERO;
 
         if (listaContas != null) {
             for (ContasPagar conta : listaContas) {
-                if (conta.getDataRecebimento() == null) {
+                if (conta.getDataPagamento() == null) {
                     totalEmAberto = totalEmAberto.add(conta.getValor());
                 } else {
-                    totalRecebido = totalRecebido.add(conta.getValor());
+                    totalPagado = totalPagado.add(conta.getValor());
                 }
             }
         }
-        totalGeral = totalEmAberto.add(totalRecebido);
+        totalGeral = totalEmAberto.add(totalPagado);
     }
 
-    public void registrarRecebimento() {
+    public void registrarPagamento() {
         if (contaSelecionada == null || contaSelecionada.getId() == null) {
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", "Selecione uma conta para registrar o recebimento!"));
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", "Selecione uma conta para registrar o pagamento!"));
             return;
         }
 
-        if (contaSelecionada.getDataRecebimento() != null) {
+        if (contaSelecionada.getDataPagamento() != null) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", "Esta conta já foi recebida!"));
             return;
         }
 
         if (contaSelecionada.getCompra() != null && contaSelecionada.getParcela() > 1) {
-            boolean existeAnterior = contasReceberFacade.existeParcelaAnteriorEmAberto(contaSelecionada);
+            boolean existeAnterior = contasPagarFacade.existeParcelaAnteriorEmAberto(contaSelecionada);
             if (existeAnterior) {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", 
-                        "Não é possível quitar esta parcela, pois existem parcelas anteriores em aberto para a mesma venda."));
+                        "Não é possível quitar esta parcela, pois existem parcelas anteriores em aberto para a mesma compra."));
                 return;
             }
         }
 
-        contaSelecionada.setDataRecebimento(new Date());
+        contaSelecionada.setDataPagamento(new Date());
 
         try {
-            contasReceberFacade.salvar(contaSelecionada);
+            contasPagarFacade.salvar(contaSelecionada);
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Conta Nº " + contaSelecionada.getId() + " recebida com sucesso!"));
 
             buscarContas(); 
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Erro ao registrar recebimento: " + e.getMessage()));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Erro ao registrar pagamento: " + e.getMessage()));
         }
     }
 
@@ -154,20 +154,20 @@ public class ContasPagarControle implements Serializable {
         return listaComprasAgrupadas;
     }
     
-    public String getNomeClienteFiltro() {
-        return nomeClienteFiltro;
+    public String getNomeFornecedorFiltro() {
+        return nomeFornecedorFiltro;
     }
 
-    public void setNomeClienteFiltro(String nomeClienteFiltro) {
-        this.nomeClienteFiltro = nomeClienteFiltro;
+    public void setNomeFornecedorFiltro(String nomeFornecedorFiltro) {
+        this.nomeFornecedorFiltro = nomeFornecedorFiltro;
     }
 
     public BigDecimal getTotalEmAberto() {
         return totalEmAberto;
     }
 
-    public BigDecimal getTotalRecebido() {
-        return totalRecebido;
+    public BigDecimal getTotalPagado() {
+        return totalPagado;
     }
 
     public BigDecimal getTotalGeral() {

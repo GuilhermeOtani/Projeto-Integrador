@@ -135,12 +135,6 @@ public class VendaControle implements Serializable {
         }
 
         venda.setValorTotal(venda.calcularValorTotal());
-
-        // ==========================================================
-        // AQUI ESTÁ A CORREÇÃO PRINCIPAL
-        // O método 'salvar' retorna a instância da Venda já com o ID.
-        // Devemos usar essa instância retornada a partir de agora.
-        // ==========================================================
         Venda vendaSalva = vendaFacade.salvarERetornar(venda);
 
         // 2. Atualiza o estoque usando a instância correta

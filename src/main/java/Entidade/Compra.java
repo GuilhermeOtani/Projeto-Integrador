@@ -25,23 +25,52 @@ public class Compra implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataCompra;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private Fornecedor fornecedor;
+
     @Column(name = "ValorTotal")
     private BigDecimal valorTotal;
-    @OneToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
-            mappedBy = "compra")
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compra", fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     private List<ItemCompra> itemCompras;
+
+    @Column(length = 50)
+    private String formaPagamento;
+
+    private Integer numeroParcelas;
+
+    @OneToMany(mappedBy = "compra", fetch = FetchType.LAZY)
+    private List<ContasPagar> parcelas;
+
+    public List<ContasPagar> getParcelas() {
+        return parcelas;
+    }
+
+    public void setParcelas(List<ContasPagar> parcelas) {
+        this.parcelas = parcelas;
+    }
 
     public Compra() {
         itemCompras = new ArrayList<>();
         dataCompra = new Date();
+        valorTotal = BigDecimal.ZERO; // Boa prática inicializar
+        numeroParcelas = 1; // Padrão
     }
 
+    public BigDecimal calcularValorTotal() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (ItemCompra it : itemCompras) {
+            total = total.add(it.getSubTotal());
+        }
+        return total;
+    }
+
+    // --- Getters e Setters ---
     public Long getId() {
         return id;
     }
@@ -66,14 +95,6 @@ public class Compra implements Serializable {
         this.fornecedor = fornecedor;
     }
 
-    public BigDecimal calcularValorTotal() {
-        BigDecimal total = BigDecimal.ZERO;
-        for (ItemCompra it : itemCompras) {
-            total = total.add(it.getSubTotal());
-        }
-        return total;
-    }
-
     public BigDecimal getValorTotal() {
         return valorTotal;
     }
@@ -90,4 +111,20 @@ public class Compra implements Serializable {
         this.itemCompras = itemCompras;
     }
 
+    // NOVOS GETTERS E SETTERS
+    public String getFormaPagamento() {
+        return formaPagamento;
+    }
+
+    public void setFormaPagamento(String formaPagamento) {
+        this.formaPagamento = formaPagamento;
+    }
+
+    public Integer getNumeroParcelas() {
+        return numeroParcelas;
+    }
+
+    public void setNumeroParcelas(Integer numeroParcelas) {
+        this.numeroParcelas = numeroParcelas;
+    }
 }
