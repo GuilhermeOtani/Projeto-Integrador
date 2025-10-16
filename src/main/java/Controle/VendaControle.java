@@ -2,6 +2,7 @@ package Controle;
 
 import Entidade.Cliente;
 import Entidade.ContasReceber;
+import Entidade.Fornecedor;
 import Entidade.ItemVenda;
 import Entidade.Produto;
 import Entidade.Venda;
@@ -16,6 +17,7 @@ import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -32,6 +34,7 @@ public class VendaControle implements Serializable {
     private Produto produtoSelecionado;
     private Cliente clienteSelecionado;
     private Date dataPrimeiroVencimento;
+    private String tipoPagamento;
 
     @EJB
     private transient ProdutoFacade produtoFacade; // Adicionado transient
@@ -145,9 +148,12 @@ public class VendaControle implements Serializable {
         }
 
         // 3. GERA AS CONTAS A RECEBER (SE NECESSÁRIO)
-        if ("A Prazo".equalsIgnoreCase(vendaSalva.getFormaPagamento())) {
-            // Passamos a 'vendaSalva' (que tem ID) como parâmetro
-            gerarParcelas(vendaSalva);
+        String formaPagamento = vendaSalva.getFormaPagamento();
+        if ("Boleto Bancário".equalsIgnoreCase(formaPagamento)
+                || "Carnê".equalsIgnoreCase(formaPagamento)
+                || "Cartão de Crédito Parcelado".equalsIgnoreCase(formaPagamento)) {
+
+            gerarParcelas(vendaSalva); // Passamos a 'vendaSalva' (que tem ID) como parâmetro
         }
 
         FacesContext context = FacesContext.getCurrentInstance();
@@ -198,6 +204,56 @@ public class VendaControle implements Serializable {
 
             contasReceberFacade.salvar(cr);
         }
+    }
+
+    // VendaControle.java
+// Altere o método onTipoPagamentoChange para isto:
+    public void onTipoPagamentoChange() {
+        // A única ação agora é limpar a forma de pagamento anterior,
+        // forçando o usuário a fazer uma nova seleção nos menus que aparecerão.
+        this.venda.setFormaPagamento(null);
+
+        // Se a opção for 'A Prazo', podemos pré-configurar valores padrão.
+        if ("APrazo".equals(this.tipoPagamento)) {
+            this.venda.setNumeroParcelas(1);
+            this.dataPrimeiroVencimento = new Date();
+        }
+    }
+
+    public List<Cliente> completarCliente(String query) {
+        String queryLowerCase = query.toLowerCase();
+
+        // Retorna a lista inteira se a busca for vazia (útil para o dropdown)
+        if (query == null || query.isEmpty()) {
+            return getListaClientes();
+        }
+
+        // Filtra a lista de fornecedores
+        return getListaClientes().stream()
+                .filter(f -> f.getNome().toLowerCase().contains(queryLowerCase))
+                .collect(Collectors.toList());
+    }
+
+    public List<Produto> completarProduto(String query) {
+        String queryLowerCase = query.toLowerCase();
+
+        // Retorna a lista inteira se a busca for vazia
+        if (query == null || query.isEmpty()) {
+            return getListaProdutos();
+        }
+
+        // Filtra a lista de produtos
+        return getListaProdutos().stream()
+                .filter(p -> p.getNome().toLowerCase().contains(queryLowerCase))
+                .collect(Collectors.toList());
+    }
+
+    public String getTipoPagamento() {
+        return tipoPagamento;
+    }
+
+    public void setTipoPagamento(String tipoPagamento) {
+        this.tipoPagamento = tipoPagamento;
     }
 
     public Venda getVenda() {

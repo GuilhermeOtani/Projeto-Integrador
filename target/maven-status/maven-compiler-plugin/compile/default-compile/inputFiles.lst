@@ -13,6 +13,7 @@ C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\sr
 C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Facade\ContasPagarFacade.java
 C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\EstadoControle.java
 C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Entidade\Fornecedor.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\RelatorioServlet.java
 C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Login\Login.java
 C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Entidade\ContasPagar.java
 C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Entidade\Produto.java
@@ -36,6 +37,7 @@ C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\sr
 C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Entidade\ContasReceber.java
 C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\DTO\ContasReceberDTO.java
 C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\DashboardControle.java
+C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\ProdutoRelatorioControle.java
 C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\FornecedorControle.java
 C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Controle\CompraControle.java
 C:\Users\melhe\OneDrive\Documentos\NetBeansProjects\sei la\Projeto-Integrador\src\main\java\Converter\CidadeConverter.java

@@ -5,6 +5,8 @@ import Entidade.Venda;
 import Facade.ContasReceberFacade;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -47,9 +49,6 @@ public class ContasReceberControle implements Serializable {
         agruparContasPorVenda(); // A chamada permanece aqui
     }
 
-    // ======================================================================================
-    // MÉTODO CORRIGIDO PARA SER COMPATÍVEL COM VERSÕES ANTIGAS DO JAVA
-    // ======================================================================================
     private void agruparContasPorVenda() {
         if (listaContas == null || listaContas.isEmpty()) {
             listaVendasAgrupadas = new ArrayList<>();
@@ -148,25 +147,31 @@ public class ContasReceberControle implements Serializable {
 
     public String getStatus(ContasReceber conta) {
         if (conta == null) {
-            return ""; // Retorna vazio se o objeto for nulo por algum motivo
+            return "";
         }
         if (conta.getDataRecebimento() != null) {
             return "RECEBIDA";
         }
-        // Verifica se a data de vencimento não é nula e se a data atual é posterior a ela
-        if (conta.getDataVencimento() != null && new Date().after(conta.getDataVencimento())) {
-            return "VENCIDA";
+
+        if (conta.getDataVencimento() != null) {
+            // Converte a data de vencimento para LocalDate (sem horas)
+            LocalDate dataVencimentoSemHoras = conta.getDataVencimento().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
+            // Pega a data de hoje (também sem horas)
+            LocalDate hoje = LocalDate.now();
+
+            // Compara: a conta só está vencida se a data de hoje for ESTRITAMENTE POSTERIOR à data de vencimento.
+            if (hoje.isAfter(dataVencimentoSemHoras)) {
+                return "VENCIDA";
+            }
         }
+
         return "ABERTA";
     }
 
-    /**
-     * Método público que retorna a classe CSS correspondente ao status da
-     * conta.
-     *
-     * @param conta A instância de ContasReceber da linha da tabela.
-     * @return A String com as classes CSS para o badge de status.
-     */
+//arrumar q o dia de hoje ja conta como vencida e fazer na compra tambem
     public String getStatusClass(ContasReceber conta) {
         if (conta == null) {
             return "data-badge";

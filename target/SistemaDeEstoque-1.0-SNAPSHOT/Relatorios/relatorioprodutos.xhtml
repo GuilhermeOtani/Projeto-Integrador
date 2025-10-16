@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="body">
+            <f:view locale="pt_BR" />
+
+            <h:form id="formFiltros">
+                <div class="content">
+                    <div class="container-fluid">
+                        <h3>Relatório de Inventário de Produtos</h3>
+                        <p:separator />
+
+                        <p:panel header="Filtros para Geração do Relatório">
+                            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank">
+                                <p:outputLabel for="filtroNome" value="Filtrar por nome do produto:" />
+                                <p:inputText id="filtroNome" 
+                                             value="#{produtoRelatorioControle.filtro}" 
+                                             placeholder="Deixe em branco para listar todos"/>
+                            </p:panelGrid>
+                        </p:panel>
+
+                        <br/>
+
+                        <p:toolbar>
+                            <p:toolbarGroup>
+                                <p:button value="Gerar Relatório em PDF" 
+                                          icon="pi pi-file-pdf"
+                                          href="#{request.contextPath}/relatorio/produtos"  target="_blank"
+                                          styleClass="ui-button-success">
+                                    <f:param name="filtro" value="#{produtoRelatorioControle.filtro}" />
+                                </p:button>                            </p:toolbarGroup>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

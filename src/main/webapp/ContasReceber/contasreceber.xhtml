@@ -286,14 +286,12 @@
                                 <p:rowExpansion>
                                     <p:dataTable value="#{venda.parcelas}" var="conta" styleClass="ui-datatable-nested">
                                         <p:column headerText="Status" style="text-align: center;">
-                                            <p:column headerText="Status" style="text-align: center;">
-                                                <p:column headerText="Status" style="text-align: center;">
-                                                    <span class="#{contasReceberControle.getStatusClass(conta)}">
-                                                        #{contasReceberControle.getStatus(conta)}
-                                                    </span>
-                                                </p:column>
-                                            </p:column>
+                                            <span class="#{contasReceberControle.getStatusClass(conta)}">
+                                                #{contasReceberControle.getStatus(conta)}
+                                            </span>
                                         </p:column>
+
+
 
                                         <p:column headerText="Parcela" style="text-align: center;">
                                             <h:outputText value="#{conta.parcela}" />
@@ -309,7 +307,7 @@
                                             <h:outputText value="#{conta.valor}" style="font-weight: bold;">
                                                 <f:convertNumber type="currency" currencySymbol="R$ "/>
                                             </h:outputText>
-                                        </p:column>
+                                        </p:column> 
                                         <p:column headerText="Data Recebimento" style="text-align: center;">
                                             <h:panelGroup rendered="#{not empty conta.dataRecebimento}">
                                                 <h:outputText value="#{conta.dataRecebimento}">

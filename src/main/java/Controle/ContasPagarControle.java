@@ -2,9 +2,12 @@ package Controle;
 
 import Entidade.ContasPagar;
 import Entidade.Compra;
+import Entidade.ContasReceber;
 import Facade.ContasPagarFacade;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -21,12 +24,10 @@ import javax.inject.Named;
 @ViewScoped
 public class ContasPagarControle implements Serializable {
 
-    
-    
     private ContasPagar contaSelecionada;
     private List<ContasPagar> listaContas;
-    private List<Compra> listaComprasAgrupadas; 
-   
+    private List<Compra> listaComprasAgrupadas;
+
     private Date dataFiltroVencimento;
     private boolean mostraTodasContas = false;
     private String nomeFornecedorFiltro;
@@ -59,7 +60,7 @@ public class ContasPagarControle implements Serializable {
         }
 
         Map<Long, Compra> comprasMap = new LinkedHashMap<>();
-        
+
         for (ContasPagar conta : listaContas) {
             if (conta.getCompra() == null) {
                 continue; // Pula contas que por algum motivo não têm compra
@@ -84,7 +85,7 @@ public class ContasPagarControle implements Serializable {
             // 2. Adiciona a parcela atual à lista de parcelas da Compra correta
             compraAgrupada.getParcelas().add(conta); // Use o seu método get, ex: getItemCompras
         }
-        
+
         this.listaComprasAgrupadas = new ArrayList<>(comprasMap.values());
     }
 
@@ -128,8 +129,8 @@ public class ContasPagarControle implements Serializable {
             boolean existeAnterior = contasPagarFacade.existeParcelaAnteriorEmAberto(contaSelecionada);
             if (existeAnterior) {
                 FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção", 
-                        "Não é possível quitar esta parcela, pois existem parcelas anteriores em aberto para a mesma compra."));
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, "Atenção",
+                                "Não é possível quitar esta parcela, pois existem parcelas anteriores em aberto para a mesma compra."));
                 return;
             }
         }
@@ -141,19 +142,61 @@ public class ContasPagarControle implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Conta Nº " + contaSelecionada.getId() + " recebida com sucesso!"));
 
-            buscarContas(); 
+            buscarContas();
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Erro ao registrar pagamento: " + e.getMessage()));
         }
     }
 
+    public String getStatus(ContasPagar conta) {
+        if (conta == null) {
+            return "";
+        }
+        if (conta.getDataPagamento() != null) {
+            return "PAGADA";
+        }
+
+        if (conta.getDataVencimento() != null) {
+            // Converte a data de vencimento para LocalDate (sem horas)
+            LocalDate dataVencimentoSemHoras = conta.getDataVencimento().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
+            // Pega a data de hoje (também sem horas)
+            LocalDate hoje = LocalDate.now();
+
+            // Compara: a conta só está vencida se a data de hoje for ESTRITAMENTE POSTERIOR à data de vencimento.
+            if (hoje.isAfter(dataVencimentoSemHoras)) {
+                return "VENCIDA";
+            }
+        }
+
+        return "ABERTA";
+    }
+
+//arrumar q o dia de hoje ja conta como vencida e fazer na compra tambem
+    public String getStatusClass(ContasPagar conta) {
+        if (conta == null) {
+            return "data-badge";
+        }
+        // Reutiliza o método getStatus para não repetir a lógica
+        switch (getStatus(conta)) {
+            case "PAGADA":
+                return "data-badge badge-success";
+            case "VENCIDA":
+                return "data-badge badge-danger";
+            case "ABERTA":
+            default:
+                return "data-badge badge-warning"; // Usando a classe de alerta
+        }
+    }
     // ================== GETTERS E SETTERS ==================
 
     public List<Compra> getListaComprasAgrupadas() {
         return listaComprasAgrupadas;
     }
-    
+
     public String getNomeFornecedorFiltro() {
         return nomeFornecedorFiltro;
     }

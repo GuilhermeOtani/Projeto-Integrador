@@ -51,23 +51,24 @@
                     <div class="formgrid grid" style="gap: 1.5rem;">
 
                         <div class="field col-12 md:col-6">
-                            <p:outputLabel for="fornecedor" value="Fornecedore:" />
-                            <p:selectOneMenu id="fornecedor" value="#{compraControle.fornecedorSelecionado}" 
-                                             converter="#{fornecedorControle.fornecedorConverter}" 
-                                             required="true" requiredMessage="Fornecedore é obrigatório!">
-                                <f:selectItem itemLabel="Selecione um fornecedor" itemValue="#{null}" noSelectionOption="true" />
-                                <f:selectItems value="#{compraControle.listaFornecedores}" var="c" itemLabel="#{c.nome}" itemValue="#{c}" />
-                            </p:selectOneMenu>
+                            <p:outputLabel for="fornecedor" value="Fornecedor:" />
+                            <p:autoComplete id="fornecedor" value="#{compraControle.fornecedorSelecionado}"
+                                            completeMethod="#{compraControle.completarFornecedor}"
+                                            var="f" itemLabel="#{f.nome}" itemValue="#{f}"
+                                            converter="#{fornecedorControle.fornecedorConverter}"
+                                            required="true" requiredMessage="Fornecedor é obrigatório!"
+                                            dropdown="true" placeholder="Digite ou selecione um fornecedor" />
                         </div>
 
                         <div class="field col-12 md:col-6">
                             <p:outputLabel for="produto" value="Produto:" />
-                            <p:selectOneMenu id="produto" value="#{compraControle.produtoSelecionado}" 
-                                             converter="#{produtoControle.produtoConverter}">
-                                <f:selectItem itemLabel="Selecione um produto" itemValue="#{null}" noSelectionOption="true" />
-                                <f:selectItems value="#{compraControle.listaProdutos}" var="p" itemLabel="#{p.nome} (Estoque: #{p.estoque})" itemValue="#{p}" />
-                                <p:ajax event="change" update=":formCompra:detalhesProduto :formCompra:panelTotalizacao"/>
-                            </p:selectOneMenu>
+                            <p:autoComplete id="produto" value="#{compraControle.produtoSelecionado}"
+                                            completeMethod="#{compraControle.completarProduto}"
+                                            var="p" itemLabel="#{p.nomeComEstoque}" itemValue="#{p}"
+                                            converter="#{produtoControle.produtoConverter}"
+                                            dropdown="true" placeholder="Digite ou selecione um produto">
+                                <p:ajax event="itemSelect" update=":formCompra:detalhesProduto :formCompra:panelTotalizacao" />
+                            </p:autoComplete>
                         </div>
                         <div class="field col-12 md:col-6">
                             <p:outputLabel value="Preço:" />
@@ -84,10 +85,7 @@
                         </div>
                     </div>
 
-                    <p:commandButton value="Adicionar ao Carrinho" icon="pi pi-plus"
-                                     actionListener="#{compraControle.adicionarItem}"
-                                     update=":formCompra:tabelaItens :formCompra:msgs :formCompra:panelTotalizacao"
-                                     styleClass="salvar-button" />
+
                 </p:panel>
 
 
@@ -98,34 +96,71 @@
                             <div class="col-12 md:col-8">
                                 <p:panel header="Opções de Pagamento">
                                     <div class="formgrid grid">
-                                        <div class="field col-12 md:col-6">
-                                            <p:outputLabel for="formaPag" value="Forma de Pagamento:" />
-                                            <p:selectOneMenu id="formaPag" value="#{compraControle.compra.formaPagamento}" required="true" requiredMessage="Selecione a forma de pagamento!">
-                                                <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true" />
-                                                <f:selectItem itemLabel="Dinheiro" itemValue="Dinheiro" />
-                                                <f:selectItem itemLabel="Cartão de Débito" itemValue="Cartão de Débito" />
-                                                <f:selectItem itemLabel="Cartão de Crédito" itemValue="Cartão de Crédito" />
-                                                <f:selectItem itemLabel="Pix" itemValue="Pix" />
-                                                <f:selectItem itemLabel="A Prazo" itemValue="A Prazo" />
-                                                <p:ajax update="panelParcelas" />
-                                            </p:selectOneMenu>
+
+                                        <div>
+                                            <p:outputLabel value="Tipo de Pagamento:" style="margin-right: 1rem;"/>
+                                            <br/>
+                                            <br/>
+                                            <p:selectOneRadio id="tipoPag" value="#{compraControle.tipoPagamento}" layout="responsive" columns="2">
+                                                <f:selectItem itemLabel="À vista" itemValue="AVista" />
+                                                <f:selectItem itemLabel="A prazo" itemValue="APrazo" />
+                                                <p:ajax listener="#{compraControle.onTipoPagamentoChange}" update="panelOpcoesPagamento" />
+                                            </p:selectOneRadio>
                                         </div>
+
                                     </div>
 
-                                    <p:outputPanel id="panelParcelas">
-                                        <div class="formgrid grid" style="margin-top: 1rem;" rendered="#{compraControle.compra.formaPagamento == 'A Prazo'}">
-                                            <div class="field col-12 md:col-6">
-                                                <p:outputLabel for="numParcelas" value="Nº de Parcelas:" />
-                                                <p:spinner id="numParcelas" value="#{compraControle.compra.numeroParcelas}" min="1"/>
+                                    <p:outputPanel id="panelOpcoesPagamento">
+
+                                        <p:outputPanel id="panelAVista" rendered="#{compraControle.tipoPagamento == 'AVista'}">
+                                            <div class="formgrid grid">
+                                                <div class="field col-12 md:col-6" style="margin-top: 1rem;">
+                                                    <p:outputLabel for="formaPagVista" value="Forma de Pagamento:" />
+                                                    <p:selectOneMenu id="formaPagVista" value="#{compraControle.compra.formaPagamento}" 
+                                                                     required="true" requiredMessage="Selecione a forma de pagamento!">
+                                                        <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true" />
+                                                        <f:selectItem itemLabel="Dinheiro" itemValue="Dinheiro" />
+                                                        <f:selectItem itemLabel="Cartão de Débito" itemValue="Cartão de Débito" />
+                                                        <f:selectItem itemLabel="Cartão de Crédito (1x)" itemValue="Cartão de Crédito" />
+                                                        <f:selectItem itemLabel="Pix" itemValue="Pix" />
+                                                    </p:selectOneMenu>
+                                                </div>
                                             </div>
-                                            <div class="field col-12 md:col-6">
-                                                <p:outputLabel for="pagamento" value="Primeiro Pagamento:" />
-                                                <p:calendar id="pagamento" value="#{compraControle.dataPrimeiroVencimento}" pattern="dd/MM/yyyy" mask="true" />
+                                        </p:outputPanel>
+
+                                        <p:outputPanel id="panelParcelas" rendered="#{compraControle.tipoPagamento == 'APrazo'}">
+                                            <div class="formgrid grid" style="margin-top: 1rem;">
+
+                                                <div class="field col-12">
+                                                    <p:outputLabel for="formaPagPrazo" value="Forma de Pagamento:" />
+                                                    <p:selectOneMenu id="formaPagPrazo" value="#{compraControle.compra.formaPagamento}" 
+                                                                     required="true" requiredMessage="Selecione a forma de pagamento a prazo!">
+                                                        <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true" />
+                                                        <f:selectItem itemLabel="Boleto Bancário" itemValue="Boleto Bancário" />
+                                                        <f:selectItem itemLabel="Carnê" itemValue="Carnê" />
+                                                        <f:selectItem itemLabel="Cartão de Crédito (Parcelado)" itemValue="Cartão de Crédito Parcelado" />
+                                                    </p:selectOneMenu>
+                                                </div>
+
+                                                <div class="field col-12 md:col-6">
+                                                    <p:outputLabel for="numParcelas" value="Nº de Parcelas:" />
+                                                    <p:spinner id="numParcelas" value="#{compraControle.compra.numeroParcelas}" min="1"/>
+                                                </div>
+                                                <div class="field col-12 md:col-6">
+                                                    <p:outputLabel for="vencimento" value="Primeiro Vencimento:" />
+                                                    <p:calendar id="vencimento" value="#{compraControle.dataPrimeiroVencimento}" pattern="dd/MM/yyyy" mask="true" />
+                                                </div>
                                             </div>
-                                        </div>
+                                        </p:outputPanel>
+
                                     </p:outputPanel>
                                 </p:panel>
                             </div>
+                            <p:commandButton value="Adicionar ao Carrinho" icon="pi pi-plus"
+                                             actionListener="#{compraControle.adicionarItem}"
+                                             update=":formCompra:tabelaItens :formCompra:msgs :formCompra:panelTotalizacao"
+                                             styleClass="salvar-button" style="width: 100%; font-size: 1.2rem;" />
+
                             <p:panel header="Itens no Carrinho" styleClass="p-fluid" style="margin-top: 2rem;">
                                 <p:dataTable id="tabelaItens" value="#{compraControle.compra.itemCompras}" var="item" style="width:100%"
                                              emptyMessage="Nenhum item adicionado à compra.">
@@ -155,12 +190,7 @@
                                 </p:dataTable>
                             </p:panel>
                             <div class="col-12 md:col-4" style="text-align: right; align-self: center;">
-                                <h:outputText value="VALOR TOTAL" style="font-size: 1.2rem; color: #6c757d;"/>
-                                <br/>
-                                <h:outputText value="#{compraControle.compra.valorTotal}" styleClass="valor-total-display">
-                                    <f:convertNumber type="currency" currencySymbol="R$ " />
-                                </h:outputText>
-                                <br/>
+
                                 <p:commandButton value="Finalizar Compra" icon="pi pi-check"
                                                  actionListener="#{compraControle.finalizarCompra}"
                                                  update="@form"

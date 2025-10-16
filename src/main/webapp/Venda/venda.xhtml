@@ -52,22 +52,23 @@
 
                         <div class="field col-12 md:col-6">
                             <p:outputLabel for="cliente" value="Cliente:" />
-                            <p:selectOneMenu id="cliente" value="#{vendaControle.clienteSelecionado}" 
-                                             converter="#{clienteControle.clienteConverter}" 
-                                             required="true" requiredMessage="Cliente é obrigatório!">
-                                <f:selectItem itemLabel="Selecione um cliente" itemValue="#{null}" noSelectionOption="true" />
-                                <f:selectItems value="#{vendaControle.listaClientes}" var="c" itemLabel="#{c.nome}" itemValue="#{c}" />
-                            </p:selectOneMenu>
+                            <p:autoComplete id="cliente" value="#{vendaControle.clienteSelecionado}"
+                                            completeMethod="#{vendaControle.completarCliente}"
+                                            var="f" itemLabel="#{f.nome}" itemValue="#{f}"
+                                            converter="#{clienteControle.clienteConverter}"
+                                            required="true" requiredMessage="Cliente é obrigatório!"
+                                            dropdown="true" placeholder="Digite ou selecione um cliente" />
                         </div>
 
                         <div class="field col-12 md:col-6">
                             <p:outputLabel for="produto" value="Produto:" />
-                            <p:selectOneMenu id="produto" value="#{vendaControle.produtoSelecionado}" 
-                                             converter="#{produtoControle.produtoConverter}">
-                                <f:selectItem itemLabel="Selecione um produto" itemValue="#{null}" noSelectionOption="true" />
-                                <f:selectItems value="#{vendaControle.listaProdutos}" var="p" itemLabel="#{p.nome} (Estoque: #{p.estoque})" itemValue="#{p}" />
-                                <p:ajax event="change" update=":formVenda:detalhesProduto :formVenda:panelTotalizacao"/>
-                            </p:selectOneMenu>
+                            <p:autoComplete id="produto" value="#{vendaControle.produtoSelecionado}"
+                                            completeMethod="#{vendaControle.completarProduto}"
+                                            var="p" itemLabel="#{p.nomeComEstoque}" itemValue="#{p}"
+                                            converter="#{produtoControle.produtoConverter}"
+                                            dropdown="true" placeholder="Digite ou selecione um produto">
+                                <p:ajax event="itemSelect" update=":formVenda:detalhesProduto :formVenda:panelTotalizacao" />
+                            </p:autoComplete>
                         </div>
                         <div class="field col-12 md:col-6">
                             <p:outputLabel value="Preço:" />
@@ -84,10 +85,7 @@
                         </div>
                     </div>
 
-                    <p:commandButton value="Adicionar ao Carrinho" icon="pi pi-plus"
-                                     actionListener="#{vendaControle.adicionarItem}"
-                                     update=":formVenda:tabelaItens :formVenda:msgs :formVenda:panelTotalizacao"
-                                     styleClass="salvar-button" />
+
                 </p:panel>
 
 
@@ -97,35 +95,77 @@
                         <div class="grid">
                             <div class="col-12 md:col-8">
                                 <p:panel header="Opções de Pagamento">
+                                    
                                     <div class="formgrid grid">
-                                        <div class="field col-12 md:col-6">
-                                            <p:outputLabel for="formaPag" value="Forma de Pagamento:" />
-                                            <p:selectOneMenu id="formaPag" value="#{vendaControle.venda.formaPagamento}" required="true" requiredMessage="Selecione a forma de pagamento!">
-                                                <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true" />
-                                                <f:selectItem itemLabel="Dinheiro" itemValue="Dinheiro" />
-                                                <f:selectItem itemLabel="Cartão de Débito" itemValue="Cartão de Débito" />
-                                                <f:selectItem itemLabel="Cartão de Crédito" itemValue="Cartão de Crédito" />
-                                                <f:selectItem itemLabel="Pix" itemValue="Pix" />
-                                                <f:selectItem itemLabel="A Prazo" itemValue="A Prazo" />
-                                                <p:ajax update="panelParcelas" />
-                                            </p:selectOneMenu>
+
+                                        <div >
+                                            <p:outputLabel value="Tipo de Pagamento:" style="margin-right: 1rem;"/>
+                                            <br/>
+                                            <br/>
+                                          
+                                            <p:selectOneRadio id="tipoPag" value="#{vendaControle.tipoPagamento}" layout="responsive" columns="2">
+                                                <f:selectItem itemLabel="À vista" itemValue="AVista" />
+                                                <f:selectItem itemLabel="A prazo" itemValue="APrazo" />
+                                                <p:ajax listener="#{vendaControle.onTipoPagamentoChange}" update="panelOpcoesPagamento" />
+                                            </p:selectOneRadio>
                                         </div>
+
                                     </div>
 
-                                    <p:outputPanel id="panelParcelas">
-                                        <div class="formgrid grid" style="margin-top: 1rem;" rendered="#{vendaControle.venda.formaPagamento == 'A Prazo'}">
-                                            <div class="field col-12 md:col-6">
-                                                <p:outputLabel for="numParcelas" value="Nº de Parcelas:" />
-                                                <p:spinner id="numParcelas" value="#{vendaControle.venda.numeroParcelas}" min="1"/>
+                                    <p:outputPanel id="panelOpcoesPagamento">
+
+                                        <p:outputPanel id="panelAVista" rendered="#{vendaControle.tipoPagamento == 'AVista'}">
+                                            <div class="formgrid grid">
+                                                <div class="field col-12 md:col-6" style="margin-top: 1rem;">
+                                                    <p:outputLabel for="formaPagVista" value="Forma de Pagamento:" />
+                                                    <p:selectOneMenu id="formaPagVista" value="#{vendaControle.venda.formaPagamento}" 
+                                                                     required="true" requiredMessage="Selecione a forma de pagamento!">
+                                                        <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true" />
+                                                        <f:selectItem itemLabel="Dinheiro" itemValue="Dinheiro" />
+                                                        <f:selectItem itemLabel="Cartão de Débito" itemValue="Cartão de Débito" />
+                                                        <f:selectItem itemLabel="Cartão de Crédito (1x)" itemValue="Cartão de Crédito" />
+                                                        <f:selectItem itemLabel="Pix" itemValue="Pix" />
+                                                    </p:selectOneMenu>
+
+                                                </div>
                                             </div>
-                                            <div class="field col-12 md:col-6">
-                                                <p:outputLabel for="vencimento" value="Primeiro Vencimento:" />
-                                                <p:calendar id="vencimento" value="#{vendaControle.dataPrimeiroVencimento}" pattern="dd/MM/yyyy" mask="true" />
+
+                                        </p:outputPanel>
+
+                                        <p:outputPanel id="panelParcelas" rendered="#{vendaControle.tipoPagamento == 'APrazo'}">
+                                            <div class="formgrid grid" style="margin-top: 1rem;">
+
+                                                <div class="field col-12">
+                                                    <p:outputLabel for="formaPagPrazo" value="Forma de Pagamento:" />
+                                                    <p:selectOneMenu id="formaPagPrazo" value="#{vendaControle.venda.formaPagamento}" 
+                                                                     required="true" requiredMessage="Selecione a forma de pagamento a prazo!">
+                                                        <f:selectItem itemLabel="Selecione..." itemValue="#{null}" noSelectionOption="true" />
+                                                        <f:selectItem itemLabel="Boleto Bancário" itemValue="Boleto Bancário" />
+                                                        <f:selectItem itemLabel="Carnê" itemValue="Carnê" />
+                                                        <f:selectItem itemLabel="Cartão de Crédito (Parcelado)" itemValue="Cartão de Crédito Parcelado" />
+                                                    </p:selectOneMenu>
+                                                </div>
+
+                                                <div class="field col-12 md:col-6">
+                                                    <p:outputLabel for="numParcelas" value="Nº de Parcelas:" />
+                                                    <p:spinner id="numParcelas" value="#{vendaControle.venda.numeroParcelas}" min="1"/>
+                                                </div>
+                                                <div class="field col-12 md:col-6">
+                                                    <p:outputLabel for="vencimento" value="Primeiro Vencimento:" />
+                                                    <p:calendar id="vencimento" value="#{vendaControle.dataPrimeiroVencimento}" pattern="dd/MM/yyyy" mask="true" />
+                                                </div>
                                             </div>
-                                        </div>
+                                        </p:outputPanel>
+                                        
                                     </p:outputPanel>
                                 </p:panel>
                             </div>
+                            <p:commandButton value="Adicionar ao Carrinho" icon="pi pi-plus"
+                                             actionListener="#{vendaControle.adicionarItem}"
+                                             update=":formVenda:tabelaItens :formVenda:msgs :formVenda:panelTotalizacao"
+                                             styleClass="salvar-button" style="width: 100%; font-size: 1.2rem; text-align: center" />
+
+
                             <p:panel header="Itens no Carrinho" styleClass="p-fluid" style="margin-top: 2rem;">
                                 <p:dataTable id="tabelaItens" value="#{vendaControle.venda.itensVendas}" var="item" style="width:100%"
                                              emptyMessage="Nenhum item adicionado à venda.">
@@ -155,12 +195,7 @@
                                 </p:dataTable>
                             </p:panel>
                             <div class="col-12 md:col-4" style="text-align: right; align-self: center;">
-                                <h:outputText value="VALOR TOTAL" style="font-size: 1.2rem; color: #6c757d;"/>
-                                <br/>
-                                <h:outputText value="#{vendaControle.venda.valorTotal}" styleClass="valor-total-display">
-                                    <f:convertNumber type="currency" currencySymbol="R$ " />
-                                </h:outputText>
-                                <br/>
+
                                 <p:commandButton value="Finalizar Venda" icon="pi pi-check"
                                                  actionListener="#{vendaControle.finalizarVenda}"
                                                  update="@form"

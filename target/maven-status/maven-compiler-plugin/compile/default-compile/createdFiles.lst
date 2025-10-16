@@ -10,10 +10,12 @@ Controle\CompraControle.class
 Entidade\ContasReceber.class
 Converter\ProdutoConverter.class
 Controle\FornecedorControle$1.class
+Controle\RelatorioServlet.class
 Entidade\Funcionario.class
 Controle\VendaListaControle.class
 Entidade\ItemVenda.class
 Controle\VendaControle.class
+Controle\ProdutoRelatorioControle.class
 Facade\CidadeFacade.class
 Facade\ProdutoFacade.class
 Facade\VendaFacade.class
@@ -34,9 +36,11 @@ Entidade\Venda.class
 Controle\CidadeControle.class
 Controle\CompraListaControle.class
 Facade\ContasReceberFacade.class
+Controle\ContasPagarControle.class
 Facade\EstadoFacade.class
 Converter\UsuarioConverter.class
 DTO\ContasReceberDTO.class
+Facade\ContasPagarFacade.class
 Controle\ClienteControle.class
 Entidade\ItemCompra.class
 Facade\UsuarioFacade.class

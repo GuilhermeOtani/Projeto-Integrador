@@ -41,6 +41,7 @@
                 box-shadow: 2px 0 15px rgba(0, 0, 0, 0.25);
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 transition: all 0.3s ease;
+                overflow-y: auto;
             }
 
             .sidebar h2 {
@@ -917,14 +918,25 @@
                     </div>
                     <div class="submenu-container">
                         <button type="button" class="submenu-toggle">
-                            <i class="fas fa-chart-line"></i> Financeiro <i class="fas fa-chevron-down toggle-icon"></i>
+                            <i class="fas fa-wallet"></i> Financeiro <i class="fas fa-chevron-down toggle-icon"></i>
                         </button>
                         <div class="submenu">
                             <h:link outcome="/ContasReceber/contasreceber.xhtml" styleClass="submenu-link">
-                                <i class="fas fa-dollar-sign"></i>Contas á Receber
+                                <i class="fas fa-arrow-alt-circle-down"></i>Contas a Receber
                             </h:link>
                             <h:link outcome="/ContasPagar/contaspagar.xhtml" styleClass="submenu-link">
-                                <i class="fas fa-dollar-sign"></i>Contas á Pagar
+                                <i class="fas fa-arrow-alt-circle-up"></i>Contas a Pagar
+                            </h:link>
+                        </div>
+                    </div>
+
+                    <div class="submenu-container">
+                        <button type="button" class="submenu-toggle">
+                            <i class="fas fa-clipboard-list"></i> Relatórios <i class="fas fa-chevron-down toggle-icon"></i>
+                        </button>
+                        <div class="submenu">
+                            <h:link outcome="/Relatorios/relatorioprodutos.xhtml" styleClass="submenu-link">
+                                <i class="fas fa-boxes"></i>Relatório de Produtos
                             </h:link>
                         </div>
                     </div>

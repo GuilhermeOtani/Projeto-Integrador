@@ -89,6 +89,13 @@ public class Produto implements Serializable {
         this.valor = valor;
     }
 
+    public String getNomeComEstoque() {
+        if (nome == null) {
+            return "";
+        }
+        return nome + " (Estoque: " + estoque + ")";
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
